@@ -124,26 +124,15 @@ Modifiusを参考に、変更容易性を高めるプロンプト群を提供す
 
 ### 改善目標（Modifiusとの差分）
 
-現在の実装に足りない点:
-
-1. **欠陥スコアリング機能**
-   - 独自計算式に基づくスコアリング
-   - 欠陥行数カウント
-
-2. **具体的な行番号の指摘**
-   - 例: `(13, 24-26, 33-35行目)`
-
-3. **表形式での出力フォーマット**
-   - 関心の分離の欠陥テーブル
-   - カプセル化の欠陥テーブル
-
-4. **設計観点のモジュール化**
-   - コアプロンプト（基盤）
-   - DDD、Laravel等を選択可能に
-   - 言語別プロンプト（PHP、Go等）
-
-5. **Mermaidクラス図の出力形式指定**
-   - 改善後のドメインモデル図
+| 機能 | 状態 | 説明 |
+|------|------|------|
+| 欠陥スコアリング機能 | 実装済 | 独自計算式に基づくスコアリング、欠陥行数カウント |
+| 具体的な行番号の指摘 | 実装済 | 例: `(13, 24-26, 33-35行目)` |
+| 表形式での出力フォーマット | 実装済 | 関心の分離、カプセル化等の欠陥テーブル |
+| 設計観点のモジュール化 | 実装済 | DDD、Laravel、Clean Architecture選択可能 |
+| 言語別プロンプト | 実装済 | PHP、TypeScript、Go対応 |
+| Mermaidクラス図の出力形式 | 実装済 | 改善後のドメインモデル図 |
+| プロンプト外部ファイル化 | 実装済 | Markdown形式で編集可能 |
 
 ### 設計方針
 
@@ -151,27 +140,59 @@ Modifiusを参考に、変更容易性を高めるプロンプト群を提供す
 - **複数AIエージェント対応**: CursorやClaude Code等で利用可能
 - **言語・アーキテクチャの追加容易性**: 将来の拡張を見据えた設計
 
-### 将来の拡張計画
+### プロンプト外部ファイル化（実装済み）
+
+プロンプトはMarkdown + YAML Front Matter形式で外部ファイル化されている。
+PHPコードを編集せずにプロンプトの内容を変更可能。
 
 ```
-src/
-├── Prompts/
-│   ├── Core/                    # コアプロンプト
-│   │   └── CorePrompts.php
-│   ├── Functions/               # 機能別
-│   │   ├── DebtAnalysis.php
-│   │   ├── RefactoringSuggestion.php
-│   │   └── TestCodeGeneration.php
-│   ├── Perspectives/            # 設計観点別
-│   │   ├── DDD.php
-│   │   ├── Laravel.php
-│   │   └── ContainerPresentation.php
-│   └── Languages/               # 言語別
-│       ├── PHP.php
-│       ├── Go.php
-│       └── TypeScript.php
-└── CodeQualityPrompts.php       # 現在の統合クラス
+prompts/
+├── core/                        # コアプロンプト（変更容易性の基盤知識）
+│   ├── encapsulation.md         # カプセル化
+│   ├── separation-of-concerns.md # 関心の分離
+│   ├── domain-model-completeness.md # ドメインモデル完全性
+│   ├── layer-separation.md      # レイヤ分離
+│   ├── interface-design.md      # interface設計
+│   └── defect-scoring.md        # 欠陥スコアリング基準
+├── output-formats/              # 出力フォーマット定義
+│   ├── separation-of-concerns-table.md
+│   ├── encapsulation-table.md
+│   ├── domain-model-table.md
+│   ├── layer-violation-table.md
+│   ├── refactoring-suggestion-table.md
+│   ├── mermaid-class-diagram.md
+│   └── score-summary.md
+├── perspectives/                # 設計観点別プロンプト
+│   ├── ddd.md                   # Domain-Driven Design
+│   ├── laravel.md               # Laravel
+│   └── clean-architecture.md    # Clean Architecture
+├── languages/                   # 言語固有の観点
+│   ├── php.md
+│   ├── typescript.md
+│   └── go.md
+└── functions/                   # 将来の拡張用
 ```
+
+### プロンプトファイル形式
+
+```markdown
+---
+name: encapsulation
+category: core
+description: カプセル化の定義と判断基準
+---
+
+## カプセル化の定義と判断基準
+
+### 定義
+カプセル化とは、関連するデータとそれを操作するロジックを...
+```
+
+### プロンプトの編集方法
+
+1. `prompts/` 内の該当Markdownファイルを直接編集
+2. PHPコードの変更は不要
+3. Front Matter（`---`で囲まれた部分）はメタデータ、それ以下が実際のプロンプト内容
 
 ## 技術スタック
 
@@ -195,9 +216,24 @@ php server.php
 ## ディレクトリ構成
 
 ```
-├── server.php              # エントリーポイント
+├── server.php                  # エントリーポイント
+├── prompts/                    # プロンプト定義（Markdownファイル）
+│   ├── core/                   # コアプロンプト
+│   ├── output-formats/         # 出力フォーマット
+│   ├── perspectives/           # 設計観点（DDD, Laravel等）
+│   ├── languages/              # 言語固有（PHP, TypeScript等）
+│   └── functions/              # 将来の拡張用
 ├── src/
-│   └── CodeQualityPrompts.php  # プロンプト定義
+│   ├── PromptLoader.php        # Markdownプロンプト読み込み
+│   ├── CodeQualityPrompts.php  # MCPプロンプト定義
+│   └── Prompts/
+│       ├── Core/
+│       │   ├── CorePrompts.php     # コアプロンプト呼び出し
+│       │   └── OutputFormats.php   # 出力フォーマット呼び出し
+│       └── Functions/
+│           ├── DebtAnalysis.php           # 技術的負債分析
+│           ├── RefactoringSuggestion.php  # リファクタリング提案
+│           └── TestCodeGeneration.php     # テストコード生成
 ├── composer.json
 └── vendor/
 ```
