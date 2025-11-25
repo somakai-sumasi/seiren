@@ -1,0 +1,17 @@
+{
+    "name": "example/mcp-prompts-server",
+    "description": "MCP Server for code quality prompts",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "mcp/sdk": "^0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
+    }
+}

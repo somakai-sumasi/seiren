@@ -1,0 +1,127 @@
+# MCP Prompts Server - 改善TODO
+
+Modifiusを参考にした改善項目リスト
+
+## 1. コアプロンプトの作成（最重要）
+
+現状: なし
+必要: 変更容易性に関する基盤的考え方を定義するプロンプト
+
+内容:
+- カプセル化の定義と判断基準
+- 関心の分離の定義と判断基準
+- ドメインモデル完全性の定義
+- 技術レイヤ間の関心の分離
+- 各設計パターン毎の設計要件
+- interface設計の原則
+
+参考: 『良いコード／悪いコードで学ぶ設計入門』の設計原則
+
+## 2. 欠陥スコアリング機能
+
+現状: なし
+必要: 独自計算式に基づくスコアリング
+
+出力形式:
+- 欠陥行数カウント
+- 欠陥スコア（重み付け）
+
+## 3. 具体的な行番号の指摘
+
+現状: なし
+必要: プロンプトで行番号を出力するよう指示
+
+例: (13, 24-26, 33-35行目)
+
+## 4. 表形式での出力フォーマット
+
+現状: 簡易リスト形式
+必要: 構造化されたテーブル形式
+
+### 関心の分離の欠陥テーブル
+| 欠陥モジュール | 分離すべき関心（目的） | 欠陥の理由 | 欠陥行数カウント | 欠陥スコア |
+
+### カプセル化の欠陥テーブル
+| 目的 | カプセル化すべきコード | 欠陥の理由 | 欠陥行数カウント | 欠陥スコア |
+
+### 設計改善提案テーブル
+| 欠陥 | 解消方法 |
+
+## 5. プロンプトのモジュール化
+
+現状: CodeQualityPrompts.php に全て記載
+必要: 柔軟な拡張性を持たせる構造
+
+目標ディレクトリ構造:
+```
+src/
+├── Prompts/
+│   ├── Core/                    # コアプロンプト（心臓部分）
+│   │   └── CorePrompts.php
+│   ├── Functions/               # 機能別
+│   │   ├── DebtAnalysis.php
+│   │   ├── RefactoringSuggestion.php
+│   │   └── TestCodeGeneration.php
+│   ├── Perspectives/            # 設計観点別
+│   │   ├── DDD.php
+│   │   ├── Laravel.php
+│   │   ├── SpringBoot.php
+│   │   ├── ContainerPresentation.php
+│   │   ├── React.php
+│   │   └── Vue.php
+│   └── Languages/               # 言語別
+│       ├── PHP.php
+│       ├── Go.php
+│       ├── Java.php
+│       ├── Kotlin.php
+│       ├── TypeScript.php
+│       ├── Python.php
+│       └── CSharp.php
+└── CodeQualityPrompts.php       # 現在の統合クラス（将来的に廃止or統合）
+```
+
+## 6. Mermaidクラス図の出力形式指定
+
+現状: 「Mermaidクラス図」とだけ記載
+必要: 改善後のドメインモデル図を含む具体的な出力指示
+
+## 7. 設計観点の選択機能
+
+現状: なし
+必要: DDD、Laravel、SpringBoot等を引数で選択可能に
+
+例:
+- analyze_technical_debt(code, perspective: 'ddd')
+- analyze_technical_debt(code, perspective: 'laravel')
+
+## 8. 言語別プロンプトの対応
+
+現状: testFramework引数のみ
+必要: 言語特有の設計観点を含むプロンプト
+
+対応予定言語:
+- PHP
+- Go
+- Java
+- Kotlin
+- TypeScript
+- Python
+- C#
+
+---
+
+## 優先順位
+
+1. コアプロンプトの作成
+2. 出力フォーマットの改善（テーブル形式、行番号）
+3. プロンプトのモジュール化
+4. 設計観点・言語別プロンプトの追加
+5. 欠陥スコアリング機能
+
+---
+
+## 参考資料
+
+- Modifius: https://speakerdeck.com/minodriven/modifius
+- 記事: https://levtech.jp/media/article/column/detail_759/
+- 書籍: 『改訂新版 良いコード／悪いコードで学ぶ設計入門』
