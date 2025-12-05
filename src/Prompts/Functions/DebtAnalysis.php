@@ -7,12 +7,28 @@ namespace App\Prompts\Functions;
 use App\PromptLoader;
 use App\Prompts\Core\CorePrompts;
 use App\Prompts\Core\OutputFormats;
+use App\Prompts\PromptResolver;
 
 /**
  * 技術的負債分析プロンプト
  */
 final class DebtAnalysis
 {
+    /** @var array<string, string> */
+    private const PERSPECTIVE_MAPPING = [
+        'ddd' => 'ddd',
+        'laravel' => 'laravel',
+        'clean' => 'clean-architecture',
+    ];
+
+    /** @var array<string, string> */
+    private const LANGUAGE_MAPPING = [
+        'php' => 'php',
+        'typescript' => 'typescript',
+        'ts' => 'typescript',
+        'go' => 'go',
+    ];
+
     /**
      * 技術的負債分析プロンプトを生成
      *
@@ -30,12 +46,20 @@ final class DebtAnalysis
 
         $perspectivePrompt = '';
         if ($perspective !== null) {
-            $perspectivePrompt = self::getPerspectivePrompt($perspective);
+            $perspectivePrompt = PromptResolver::resolve(
+                self::PERSPECTIVE_MAPPING,
+                $perspective,
+                'perspectives'
+            );
         }
 
         $languagePrompt = '';
         if ($language !== null) {
-            $languagePrompt = self::getLanguagePrompt($language);
+            $languagePrompt = PromptResolver::resolve(
+                self::LANGUAGE_MAPPING,
+                $language,
+                'languages'
+            );
         }
 
         return PromptLoader::getInstance()->renderTemplate('functions/debt-analysis/base', [
@@ -45,39 +69,5 @@ final class DebtAnalysis
             'code' => $code,
             'outputFormat' => $outputFormat,
         ]);
-    }
-
-    private static function getPerspectivePrompt(string $perspective): string
-    {
-        $loader = PromptLoader::getInstance();
-        $path = 'perspectives/' . match ($perspective) {
-            'ddd' => 'ddd',
-            'laravel' => 'laravel',
-            'clean' => 'clean-architecture',
-            default => '',
-        };
-
-        if ($path === 'perspectives/') {
-            return '';
-        }
-
-        return $loader->exists($path) ? $loader->getContent($path) : '';
-    }
-
-    private static function getLanguagePrompt(string $language): string
-    {
-        $loader = PromptLoader::getInstance();
-        $path = 'languages/' . match (strtolower($language)) {
-            'php' => 'php',
-            'typescript', 'ts' => 'typescript',
-            'go' => 'go',
-            default => '',
-        };
-
-        if ($path === 'languages/') {
-            return '';
-        }
-
-        return $loader->exists($path) ? $loader->getContent($path) : '';
     }
 }

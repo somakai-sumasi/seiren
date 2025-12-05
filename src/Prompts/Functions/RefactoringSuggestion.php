@@ -7,12 +7,20 @@ namespace App\Prompts\Functions;
 use App\PromptLoader;
 use App\Prompts\Core\CorePrompts;
 use App\Prompts\Core\OutputFormats;
+use App\Prompts\PromptResolver;
 
 /**
  * リファクタリング提案プロンプト
  */
 final class RefactoringSuggestion
 {
+    /** @var array<string, string> */
+    private const PERSPECTIVE_MAPPING = [
+        'ddd' => 'ddd',
+        'laravel' => 'laravel',
+        'clean' => 'clean-architecture',
+    ];
+
     private static function renderContext(string $context): string
     {
         if ($context === '') {
@@ -44,7 +52,11 @@ final class RefactoringSuggestion
 
         $perspectivePrompt = '';
         if ($perspective !== null) {
-            $perspectivePrompt = self::getPerspectivePrompt($perspective);
+            $perspectivePrompt = PromptResolver::resolve(
+                self::PERSPECTIVE_MAPPING,
+                $perspective,
+                'functions/refactoring-suggestion/perspectives'
+            );
         }
 
         return PromptLoader::getInstance()->renderTemplate('functions/refactoring-suggestion/base', [
@@ -54,22 +66,5 @@ final class RefactoringSuggestion
             'code' => $code,
             'outputFormat' => $outputFormat,
         ]);
-    }
-
-    private static function getPerspectivePrompt(string $perspective): string
-    {
-        $path = match ($perspective) {
-            'ddd' => 'functions/refactoring-suggestion/perspectives/ddd',
-            'laravel' => 'functions/refactoring-suggestion/perspectives/laravel',
-            'clean' => 'functions/refactoring-suggestion/perspectives/clean-architecture',
-            default => null,
-        };
-
-        if ($path === null) {
-            return '';
-        }
-
-        $loader = PromptLoader::getInstance();
-        return $loader->exists($path) ? $loader->getContent($path) : '';
     }
 }

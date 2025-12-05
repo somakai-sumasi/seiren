@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Prompts\Functions;
 
 use App\PromptLoader;
+use App\Prompts\PromptResolver;
 
 /**
  * テストコード生成プロンプト
@@ -13,24 +14,26 @@ final class TestCodeGeneration
 {
     private const TEMPLATE_BASE = 'functions/test-code-generation/base';
 
+    /** @var array<string, string> */
     private const FRAMEWORK_GUIDE_MAP = [
-        'phpunit' => 'functions/test-code-generation/frameworks/phpunit',
-        'jest' => 'functions/test-code-generation/frameworks/jest',
-        'vitest' => 'functions/test-code-generation/frameworks/vitest',
-        'pytest' => 'functions/test-code-generation/frameworks/pytest',
-        'go' => 'functions/test-code-generation/frameworks/go-testing',
-        'go testing' => 'functions/test-code-generation/frameworks/go-testing',
-        'testing' => 'functions/test-code-generation/frameworks/go-testing',
+        'phpunit' => 'phpunit',
+        'jest' => 'jest',
+        'vitest' => 'vitest',
+        'pytest' => 'pytest',
+        'go' => 'go-testing',
+        'go testing' => 'go-testing',
+        'testing' => 'go-testing',
     ];
 
+    /** @var array<string, string> */
     private const LANGUAGE_GUIDE_MAP = [
-        'php' => 'functions/test-code-generation/languages/php',
-        'typescript' => 'functions/test-code-generation/languages/typescript',
-        'ts' => 'functions/test-code-generation/languages/typescript',
-        'go' => 'functions/test-code-generation/languages/go',
-        'golang' => 'functions/test-code-generation/languages/go',
-        'python' => 'functions/test-code-generation/languages/python',
-        'py' => 'functions/test-code-generation/languages/python',
+        'php' => 'php',
+        'typescript' => 'typescript',
+        'ts' => 'typescript',
+        'go' => 'go',
+        'golang' => 'go',
+        'python' => 'python',
+        'py' => 'python',
     ];
 
     /**
@@ -45,8 +48,19 @@ final class TestCodeGeneration
         string $testFramework = 'PHPUnit',
         ?string $language = null
     ): string {
-        $frameworkGuide = self::getFrameworkGuide($testFramework);
-        $languageGuide = $language !== null ? self::getLanguageGuide($language) : '';
+        $frameworkGuide = PromptResolver::resolve(
+            self::FRAMEWORK_GUIDE_MAP,
+            $testFramework,
+            'functions/test-code-generation/frameworks'
+        );
+
+        $languageGuide = $language !== null
+            ? PromptResolver::resolve(
+                self::LANGUAGE_GUIDE_MAP,
+                $language,
+                'functions/test-code-generation/languages'
+            )
+            : '';
 
         return PromptLoader::getInstance()->renderTemplate(self::TEMPLATE_BASE, [
             'testFramework' => $testFramework,
@@ -54,31 +68,5 @@ final class TestCodeGeneration
             'languageGuide' => $languageGuide,
             'code' => $code,
         ]);
-    }
-
-    private static function getFrameworkGuide(string $framework): string
-    {
-        $key = strtolower(trim($framework));
-        $path = self::FRAMEWORK_GUIDE_MAP[$key] ?? null;
-
-        if ($path === null) {
-            return '';
-        }
-
-        $loader = PromptLoader::getInstance();
-        return $loader->exists($path) ? $loader->getContent($path) : '';
-    }
-
-    private static function getLanguageGuide(string $language): string
-    {
-        $key = strtolower(trim($language));
-        $path = self::LANGUAGE_GUIDE_MAP[$key] ?? null;
-
-        if ($path === null) {
-            return '';
-        }
-
-        $loader = PromptLoader::getInstance();
-        return $loader->exists($path) ? $loader->getContent($path) : '';
     }
 }
