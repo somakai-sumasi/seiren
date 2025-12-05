@@ -24,6 +24,23 @@ final class DebtAnalysis
     }
 
     /**
+     * Markdownテンプレートをプレースホルダーで置換して返す
+     *
+     * @param array<string, string> $values
+     */
+    private static function renderTemplate(string $templatePath, array $values): string
+    {
+        $template = self::getLoader()->getContent($templatePath);
+
+        $replacements = [];
+        foreach ($values as $key => $value) {
+            $replacements['{{' . $key . '}}'] = $value;
+        }
+
+        return strtr($template, $replacements);
+    }
+
+    /**
      * 技術的負債分析プロンプトを生成
      *
      * @param string $code 分析対象のコード
@@ -48,46 +65,13 @@ final class DebtAnalysis
             $languagePrompt = self::getLanguagePrompt($language);
         }
 
-        return <<<PROMPT
-あなたは変更容易性を専門とするコードレビュアーです。
-以下のコードを分析し、技術的負債を特定してください。
-
-# 分析の基盤知識
-
-{$corePrompt}
-
-{$perspectivePrompt}
-
-{$languagePrompt}
-
-# 対象コード
-
-行番号を参照できるよう、以下のコードを分析してください：
-
-```
-{$code}
-```
-
-# 分析手順
-
-1. コードを読み、各行が何をしているか理解する
-2. カプセル化の観点から問題を特定する
-3. 関心の分離の観点から問題を特定する
-4. ドメインモデル完全性の観点から問題を特定する
-5. レイヤ違反の観点から問題を特定する
-6. 各欠陥の行番号と欠陥スコアを計算する
-
-# 出力形式
-
-{$outputFormat}
-
-# 重要な注意事項
-
-- 必ず具体的な行番号を指摘すること（例: 13行目、24-26行目）
-- 欠陥スコアは「欠陥行数 × 重み係数」で計算すること
-- 推測ではなく、コードから読み取れる事実に基づいて分析すること
-- 欠陥がない場合は「検出されませんでした」と明記すること
-PROMPT;
+        return self::renderTemplate('functions/debt-analysis/base', [
+            'corePrompt' => $corePrompt,
+            'perspectivePrompt' => $perspectivePrompt,
+            'languagePrompt' => $languagePrompt,
+            'code' => $code,
+            'outputFormat' => $outputFormat,
+        ]);
     }
 
     private static function getPerspectivePrompt(string $perspective): string
