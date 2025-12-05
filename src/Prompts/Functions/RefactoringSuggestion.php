@@ -13,30 +13,13 @@ use App\Prompts\Core\OutputFormats;
  */
 final class RefactoringSuggestion
 {
-    /**
-     * Markdownテンプレートをプレースホルダーで置換して返す
-     *
-     * @param array<string, string> $values
-     */
-    private static function renderTemplate(string $templatePath, array $values): string
-    {
-        $template = PromptLoader::getInstance()->getContent($templatePath);
-
-        $replacements = [];
-        foreach ($values as $key => $value) {
-            $replacements['{{' . $key . '}}'] = $value;
-        }
-
-        return strtr($template, $replacements);
-    }
-
     private static function renderContext(string $context): string
     {
         if ($context === '') {
             return '';
         }
 
-        return self::renderTemplate(
+        return PromptLoader::getInstance()->renderTemplate(
             'functions/refactoring-suggestion/context',
             ['context' => $context]
         );
@@ -64,7 +47,7 @@ final class RefactoringSuggestion
             $perspectivePrompt = self::getPerspectivePrompt($perspective);
         }
 
-        return self::renderTemplate('functions/refactoring-suggestion/base', [
+        return PromptLoader::getInstance()->renderTemplate('functions/refactoring-suggestion/base', [
             'corePrompt' => $corePrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'contextSection' => $contextSection,

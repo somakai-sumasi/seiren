@@ -34,23 +34,6 @@ final class TestCodeGeneration
     ];
 
     /**
-     * Markdownテンプレートをプレースホルダーで置換して返す
-     *
-     * @param array<string, string> $values
-     */
-    private static function renderTemplate(string $templatePath, array $values): string
-    {
-        $template = PromptLoader::getInstance()->getContent($templatePath);
-
-        $replacements = [];
-        foreach ($values as $key => $value) {
-            $replacements['{{' . $key . '}}'] = $value;
-        }
-
-        return strtr($template, $replacements);
-    }
-
-    /**
      * テストコード生成プロンプトを生成
      *
      * @param string $code 対象のコード
@@ -65,7 +48,7 @@ final class TestCodeGeneration
         $frameworkGuide = self::getFrameworkGuide($testFramework);
         $languageGuide = $language !== null ? self::getLanguageGuide($language) : '';
 
-        return self::renderTemplate(self::TEMPLATE_BASE, [
+        return PromptLoader::getInstance()->renderTemplate(self::TEMPLATE_BASE, [
             'testFramework' => $testFramework,
             'frameworkGuide' => $frameworkGuide,
             'languageGuide' => $languageGuide,

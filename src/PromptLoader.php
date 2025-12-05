@@ -124,6 +124,25 @@ final class PromptLoader
     }
 
     /**
+     * Markdownテンプレートをプレースホルダーで置換して返す
+     *
+     * @param string $templatePath テンプレートのパス
+     * @param array<string, string> $values 置換する値（キーがプレースホルダー名）
+     * @return string 置換後のテンプレート
+     */
+    public function renderTemplate(string $templatePath, array $values): string
+    {
+        $template = $this->getContent($templatePath);
+
+        $replacements = [];
+        foreach ($values as $key => $value) {
+            $replacements['{{' . $key . '}}'] = $value;
+        }
+
+        return strtr($template, $replacements);
+    }
+
+    /**
      * Markdown + YAML Front Matterをパース
      *
      * @return array{metadata: array<string, string>, content: string}

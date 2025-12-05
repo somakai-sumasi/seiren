@@ -14,23 +14,6 @@ use App\Prompts\Core\OutputFormats;
 final class DebtAnalysis
 {
     /**
-     * Markdownテンプレートをプレースホルダーで置換して返す
-     *
-     * @param array<string, string> $values
-     */
-    private static function renderTemplate(string $templatePath, array $values): string
-    {
-        $template = PromptLoader::getInstance()->getContent($templatePath);
-
-        $replacements = [];
-        foreach ($values as $key => $value) {
-            $replacements['{{' . $key . '}}'] = $value;
-        }
-
-        return strtr($template, $replacements);
-    }
-
-    /**
      * 技術的負債分析プロンプトを生成
      *
      * @param string $code 分析対象のコード
@@ -55,7 +38,7 @@ final class DebtAnalysis
             $languagePrompt = self::getLanguagePrompt($language);
         }
 
-        return self::renderTemplate('functions/debt-analysis/base', [
+        return PromptLoader::getInstance()->renderTemplate('functions/debt-analysis/base', [
             'corePrompt' => $corePrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'languagePrompt' => $languagePrompt,
