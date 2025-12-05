@@ -11,22 +11,12 @@ use App\PromptLoader;
  */
 final class OutputFormats
 {
-    private static ?PromptLoader $loader = null;
-
-    private static function getLoader(): PromptLoader
-    {
-        if (self::$loader === null) {
-            self::$loader = new PromptLoader();
-        }
-        return self::$loader;
-    }
-
     /**
      * 関心の分離の欠陥テーブル形式
      */
     public static function separationOfConcernsTable(): string
     {
-        return self::getLoader()->getContent('output-formats/separation-of-concerns-table');
+        return PromptLoader::getInstance()->getContent('output-formats/separation-of-concerns-table');
     }
 
     /**
@@ -34,7 +24,7 @@ final class OutputFormats
      */
     public static function encapsulationTable(): string
     {
-        return self::getLoader()->getContent('output-formats/encapsulation-table');
+        return PromptLoader::getInstance()->getContent('output-formats/encapsulation-table');
     }
 
     /**
@@ -42,7 +32,7 @@ final class OutputFormats
      */
     public static function domainModelTable(): string
     {
-        return self::getLoader()->getContent('output-formats/domain-model-table');
+        return PromptLoader::getInstance()->getContent('output-formats/domain-model-table');
     }
 
     /**
@@ -50,7 +40,7 @@ final class OutputFormats
      */
     public static function layerViolationTable(): string
     {
-        return self::getLoader()->getContent('output-formats/layer-violation-table');
+        return PromptLoader::getInstance()->getContent('output-formats/layer-violation-table');
     }
 
     /**
@@ -58,7 +48,7 @@ final class OutputFormats
      */
     public static function refactoringSuggestionTable(): string
     {
-        return self::getLoader()->getContent('output-formats/refactoring-suggestion-table');
+        return PromptLoader::getInstance()->getContent('output-formats/refactoring-suggestion-table');
     }
 
     /**
@@ -66,7 +56,7 @@ final class OutputFormats
      */
     public static function mermaidClassDiagram(): string
     {
-        return self::getLoader()->getContent('output-formats/mermaid-class-diagram');
+        return PromptLoader::getInstance()->getContent('output-formats/mermaid-class-diagram');
     }
 
     /**
@@ -74,7 +64,7 @@ final class OutputFormats
      */
     public static function scoreSummary(): string
     {
-        return self::getLoader()->getContent('output-formats/score-summary');
+        return PromptLoader::getInstance()->getContent('output-formats/score-summary');
     }
 
     /**

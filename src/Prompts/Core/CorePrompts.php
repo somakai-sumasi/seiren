@@ -13,22 +13,12 @@ use App\PromptLoader;
  */
 final class CorePrompts
 {
-    private static ?PromptLoader $loader = null;
-
-    private static function getLoader(): PromptLoader
-    {
-        if (self::$loader === null) {
-            self::$loader = new PromptLoader();
-        }
-        return self::$loader;
-    }
-
     /**
      * カプセル化の定義と判断基準
      */
     public static function encapsulation(): string
     {
-        return self::getLoader()->getContent('core/encapsulation');
+        return PromptLoader::getInstance()->getContent('core/encapsulation');
     }
 
     /**
@@ -36,7 +26,7 @@ final class CorePrompts
      */
     public static function separationOfConcerns(): string
     {
-        return self::getLoader()->getContent('core/separation-of-concerns');
+        return PromptLoader::getInstance()->getContent('core/separation-of-concerns');
     }
 
     /**
@@ -44,7 +34,7 @@ final class CorePrompts
      */
     public static function domainModelCompleteness(): string
     {
-        return self::getLoader()->getContent('core/domain-model-completeness');
+        return PromptLoader::getInstance()->getContent('core/domain-model-completeness');
     }
 
     /**
@@ -52,7 +42,7 @@ final class CorePrompts
      */
     public static function layerSeparation(): string
     {
-        return self::getLoader()->getContent('core/layer-separation');
+        return PromptLoader::getInstance()->getContent('core/layer-separation');
     }
 
     /**
@@ -60,7 +50,7 @@ final class CorePrompts
      */
     public static function interfaceDesign(): string
     {
-        return self::getLoader()->getContent('core/interface-design');
+        return PromptLoader::getInstance()->getContent('core/interface-design');
     }
 
     /**
@@ -68,7 +58,7 @@ final class CorePrompts
      */
     public static function defectScoring(): string
     {
-        return self::getLoader()->getContent('core/defect-scoring');
+        return PromptLoader::getInstance()->getContent('core/defect-scoring');
     }
 
     /**
@@ -76,6 +66,6 @@ final class CorePrompts
      */
     public static function all(): string
     {
-        return self::getLoader()->getCategoryContents('core');
+        return PromptLoader::getInstance()->getCategoryContents('core');
     }
 }

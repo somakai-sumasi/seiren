@@ -9,14 +9,27 @@ namespace App;
  */
 final class PromptLoader
 {
+    private static ?PromptLoader $instance = null;
+
     private string $basePath;
 
     /** @var array<string, array{metadata: array<string, string>, content: string}> */
     private array $cache = [];
 
-    public function __construct(?string $basePath = null)
+    private function __construct(?string $basePath = null)
     {
         $this->basePath = $basePath ?? dirname(__DIR__) . '/prompts';
+    }
+
+    /**
+     * シングルトンインスタンスを取得
+     */
+    public static function getInstance(?string $basePath = null): PromptLoader
+    {
+        if (self::$instance === null) {
+            self::$instance = new self($basePath);
+        }
+        return self::$instance;
     }
 
     /**

@@ -13,16 +13,6 @@ use App\Prompts\Core\OutputFormats;
  */
 final class DebtAnalysis
 {
-    private static ?PromptLoader $loader = null;
-
-    private static function getLoader(): PromptLoader
-    {
-        if (self::$loader === null) {
-            self::$loader = new PromptLoader();
-        }
-        return self::$loader;
-    }
-
     /**
      * Markdownテンプレートをプレースホルダーで置換して返す
      *
@@ -30,7 +20,7 @@ final class DebtAnalysis
      */
     private static function renderTemplate(string $templatePath, array $values): string
     {
-        $template = self::getLoader()->getContent($templatePath);
+        $template = PromptLoader::getInstance()->getContent($templatePath);
 
         $replacements = [];
         foreach ($values as $key => $value) {
@@ -76,7 +66,7 @@ final class DebtAnalysis
 
     private static function getPerspectivePrompt(string $perspective): string
     {
-        $loader = self::getLoader();
+        $loader = PromptLoader::getInstance();
         $path = 'perspectives/' . match ($perspective) {
             'ddd' => 'ddd',
             'laravel' => 'laravel',
@@ -93,7 +83,7 @@ final class DebtAnalysis
 
     private static function getLanguagePrompt(string $language): string
     {
-        $loader = self::getLoader();
+        $loader = PromptLoader::getInstance();
         $path = 'languages/' . match (strtolower($language)) {
             'php' => 'php',
             'typescript', 'ts' => 'typescript',

@@ -13,16 +13,6 @@ use App\Prompts\Core\OutputFormats;
  */
 final class RefactoringSuggestion
 {
-    private static ?PromptLoader $loader = null;
-
-    private static function getLoader(): PromptLoader
-    {
-        if (self::$loader === null) {
-            self::$loader = new PromptLoader();
-        }
-        return self::$loader;
-    }
-
     /**
      * Markdownテンプレートをプレースホルダーで置換して返す
      *
@@ -30,7 +20,7 @@ final class RefactoringSuggestion
      */
     private static function renderTemplate(string $templatePath, array $values): string
     {
-        $template = self::getLoader()->getContent($templatePath);
+        $template = PromptLoader::getInstance()->getContent($templatePath);
 
         $replacements = [];
         foreach ($values as $key => $value) {
@@ -96,7 +86,7 @@ final class RefactoringSuggestion
             return '';
         }
 
-        $loader = self::getLoader();
+        $loader = PromptLoader::getInstance();
         return $loader->exists($path) ? $loader->getContent($path) : '';
     }
 }
