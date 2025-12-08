@@ -16,7 +16,7 @@ class CodeQualityPrompts
      *
      * @param string $code 分析対象のコード
      * @param string $perspective 設計観点（ddd, laravel, clean）
-     * @param string $language 言語（php, typescript, go）
+     * @param string $language 言語（php, typescript）
      */
     #[McpTool(
         name: 'analyze_technical_debt',
@@ -61,12 +61,12 @@ class CodeQualityPrompts
      * テストコード生成プロンプト
      *
      * @param string $code 対象のコード
-     * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
-     * @param string $language 言語（php, typescript, go, python）
+     * @param string $testFramework テストフレームワーク（PHPUnit）
+     * @param string $language 言語（php, typescript）
      */
     #[McpTool(
         name: 'generate_test_code',
-        description: '高品質なテストコードを生成。PHPUnit、Jest、Vitest、pytest、Go testing等のフレームワークに対応。'
+        description: '高品質なテストコードを生成。PHPUnit等のフレームワークに対応。'
     )]
     public function generateTestCode(
         string $code,

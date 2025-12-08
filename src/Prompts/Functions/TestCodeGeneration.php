@@ -17,12 +17,6 @@ final class TestCodeGeneration
     /** @var array<string, string> */
     private const FRAMEWORK_GUIDE_MAP = [
         'phpunit' => 'phpunit',
-        'jest' => 'jest',
-        'vitest' => 'vitest',
-        'pytest' => 'pytest',
-        'go' => 'go-testing',
-        'go testing' => 'go-testing',
-        'testing' => 'go-testing',
     ];
 
     /** @var array<string, string> */
@@ -30,10 +24,6 @@ final class TestCodeGeneration
         'php' => 'php',
         'typescript' => 'typescript',
         'ts' => 'typescript',
-        'go' => 'go',
-        'golang' => 'go',
-        'python' => 'python',
-        'py' => 'python',
     ];
 
     /**

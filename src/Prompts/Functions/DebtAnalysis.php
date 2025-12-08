@@ -26,7 +26,6 @@ final class DebtAnalysis
         'php' => 'php',
         'typescript' => 'typescript',
         'ts' => 'typescript',
-        'go' => 'go',
     ];
 
     /**
