@@ -311,7 +311,7 @@ public function myPrompt(string $arg): array
   "mcpServers": {
     "code-quality": {
       "command": "php",
-      "args": ["/Users/ueki/for_study/mcp-prompts-server/server.php"]
+      "args": ["/Users/hoge/mcp-prompts-server/server.php"]
     }
   }
 }
