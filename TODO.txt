@@ -79,19 +79,6 @@ Modifiusの実績:
 
 ---
 
-## 現プロジェクトで実装済み（参考）
-
-- [x] 技術的負債分析（analyze_technical_debt）
-- [x] 設計改善提案（suggest_refactoring）
-- [x] テストコード生成（generate_test_code）
-- [x] 行番号指定・欠陥スコアリング
-- [x] テーブル形式出力
-- [x] Mermaidクラス図出力
-- [x] 設計観点の選択（DDD, Laravel, Clean Architecture）
-- [x] プロンプトのモジュール化（Markdown外部ファイル）
-
----
-
 ## 参考資料
 
 - Modifius: https://speakerdeck.com/minodriven/modifius
