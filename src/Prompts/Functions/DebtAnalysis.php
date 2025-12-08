@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Prompts\Functions;
 
 use App\PromptLoader;
+use App\Prompts\Core\Antipatterns;
 use App\Prompts\Core\CorePrompts;
 use App\Prompts\Core\OutputFormats;
 use App\Prompts\PromptResolver;
@@ -41,6 +42,7 @@ final class DebtAnalysis
         ?string $language = null
     ): string {
         $corePrompt = CorePrompts::all();
+        $antipatternsPrompt = Antipatterns::all();
         $outputFormat = OutputFormats::all();
 
         $perspectivePrompt = '';
@@ -63,6 +65,7 @@ final class DebtAnalysis
 
         return PromptLoader::getInstance()->renderTemplate('functions/debt-analysis/base', [
             'corePrompt' => $corePrompt,
+            'antipatternsPrompt' => $antipatternsPrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'languagePrompt' => $languagePrompt,
             'code' => $code,

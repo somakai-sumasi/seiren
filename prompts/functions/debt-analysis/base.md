@@ -11,6 +11,10 @@ description: 技術的負債分析のベースプロンプト
 
 {{corePrompt}}
 
+# アンチパターン検出基準
+
+{{antipatternsPrompt}}
+
 {{perspectivePrompt}}
 
 {{languagePrompt}}
