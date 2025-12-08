@@ -41,10 +41,10 @@ final class DebtAnalysis
         $resolved = AnalysisFocus::resolve($focuses);
 
         // coreプロンプトを構築
-        $corePrompt = self::buildPromptFromFocuses($resolved['core']);
+        $corePrompt = self::buildPromptFromFocuses($resolved['core'], $loader);
 
         // antipatternsプロンプトを構築
-        $antipatternsPrompt = self::buildPromptFromFocuses($resolved['antipatterns']);
+        $antipatternsPrompt = self::buildPromptFromFocuses($resolved['antipatterns'], $loader);
 
         $outputFormat = OutputFormats::all();
 
@@ -81,13 +81,12 @@ final class DebtAnalysis
      *
      * @param list<Focus> $focuses
      */
-    private static function buildPromptFromFocuses(array $focuses): string
+    private static function buildPromptFromFocuses(array $focuses, PromptLoader $loader): string
     {
         if ($focuses === []) {
             return '';
         }
 
-        $loader = PromptLoader::getInstance();
         $contents = [];
 
         foreach ($focuses as $focus) {

@@ -30,11 +30,7 @@ final class AnalysisFocus
             $group = FocusGroup::tryFrom($input);
             if ($group !== null) {
                 foreach ($group->focuses() as $focus) {
-                    if ($focus->isCore()) {
-                        $resolved['core'][] = $focus;
-                    } else {
-                        $resolved['antipatterns'][] = $focus;
-                    }
+                    self::addFocusToCategory($focus, $resolved);
                 }
                 continue;
             }
@@ -42,11 +38,7 @@ final class AnalysisFocus
             // 個別の観点かチェック
             $focus = Focus::fromString($input);
             if ($focus !== null) {
-                if ($focus->isCore()) {
-                    $resolved['core'][] = $focus;
-                } else {
-                    $resolved['antipatterns'][] = $focus;
-                }
+                self::addFocusToCategory($focus, $resolved);
             }
         }
 
@@ -65,5 +57,19 @@ final class AnalysisFocus
     public static function defaults(): array
     {
         return [FocusGroup::BASIC->value];
+    }
+
+    /**
+     * Focusを適切なカテゴリに追加
+     *
+     * @param array{core: list<Focus>, antipatterns: list<Focus>} $resolved
+     */
+    private static function addFocusToCategory(Focus $focus, array &$resolved): void
+    {
+        if ($focus->isCore()) {
+            $resolved['core'][] = $focus;
+        } else {
+            $resolved['antipatterns'][] = $focus;
+        }
     }
 }
