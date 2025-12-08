@@ -149,7 +149,20 @@ prompts/
 │   ├── domain-model-completeness.md # ドメインモデル完全性
 │   ├── layer-separation.md      # レイヤ分離
 │   ├── interface-design.md      # interface設計
-│   └── defect-scoring.md        # 欠陥スコアリング基準
+│   ├── defect-scoring.md        # 欠陥スコアリング基準
+│   ├── cohesion.md              # 凝集度
+│   ├── coupling.md              # 結合度
+│   ├── conditional-branching.md # 条件分岐
+│   ├── immutability.md          # 不変性
+│   └── naming.md                # 命名
+├── antipatterns/                # アンチパターン検出
+│   ├── dead-code.md             # デッドコード
+│   ├── exception-abuse.md       # 例外の乱用
+│   ├── god-class.md             # 神クラス
+│   ├── half-baked-object.md     # 半端なオブジェクト
+│   ├── magic-number.md          # マジックナンバー
+│   ├── method-chain.md          # メソッドチェーン
+│   └── null-problem.md          # null問題
 ├── output-formats/              # 出力フォーマット定義
 │   ├── separation-of-concerns-table.md
 │   ├── encapsulation-table.md
@@ -165,7 +178,23 @@ prompts/
 ├── languages/                   # 言語固有の観点
 │   ├── php.md
 │   └── typescript.md
-└── functions/                   # 将来の拡張用
+└── functions/                   # 機能別プロンプト
+    ├── debt-analysis/
+    │   └── base.md              # 負債分析ベース
+    ├── refactoring-suggestion/
+    │   ├── base.md              # リファクタリング提案ベース
+    │   ├── context.md           # コンテキスト定義
+    │   └── perspectives/        # 観点別
+    │       ├── ddd.md
+    │       ├── laravel.md
+    │       └── clean-architecture.md
+    └── test-code-generation/
+        ├── base.md              # テストコード生成ベース
+        ├── frameworks/
+        │   └── phpunit.md       # PHPUnit用
+        └── languages/
+            ├── php.md
+            └── typescript.md
 ```
 
 ### プロンプトファイル形式
@@ -214,17 +243,25 @@ php server.php
 ├── server.php                  # エントリーポイント
 ├── prompts/                    # プロンプト定義（Markdownファイル）
 │   ├── core/                   # コアプロンプト
+│   ├── antipatterns/           # アンチパターン検出
 │   ├── output-formats/         # 出力フォーマット
 │   ├── perspectives/           # 設計観点（DDD, Laravel等）
 │   ├── languages/              # 言語固有（PHP, TypeScript等）
-│   └── functions/              # 将来の拡張用
+│   └── functions/              # 機能別プロンプト
 ├── src/
 │   ├── PromptLoader.php        # Markdownプロンプト読み込み
 │   ├── CodeQualityPrompts.php  # MCPプロンプト定義
 │   └── Prompts/
+│       ├── AnalysisFocus.php       # 分析フォーカス定義
 │       ├── Core/
 │       │   ├── CorePrompts.php     # コアプロンプト呼び出し
 │       │   └── OutputFormats.php   # 出力フォーマット呼び出し
+│       ├── Enums/                  # 列挙型定義
+│       │   ├── Focus.php           # フォーカス種別
+│       │   ├── FocusGroup.php      # フォーカスグループ
+│       │   ├── Language.php        # 対応言語
+│       │   ├── Perspective.php     # 設計観点
+│       │   └── TestFramework.php   # テストフレームワーク
 │       └── Functions/
 │           ├── DebtAnalysis.php           # 技術的負債分析
 │           ├── RefactoringSuggestion.php  # リファクタリング提案
