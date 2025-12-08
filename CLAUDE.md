@@ -70,13 +70,9 @@ AIエージェント（Cursor、Claude Code等）と連携し、コードの品�
         │
     ┌───┴───┐
 設計観点        対応言語
-├─DDD           ├─Go
-├─Spring Boot   ├─Java
-├─Container     ├─Kotlin
-│ Presentation  ├─PHP
-├─Laravel       ├─Python
-├─React         ├─TypeScript
-└─Vue           └─C#
+├─DDD           ├─PHP
+├─Laravel       └─TypeScript
+└─Clean Architecture
 ```
 
 ### 主要機能
@@ -130,7 +126,7 @@ Modifiusを参考に、変更容易性を高めるプロンプト群を提供す
 | 具体的な行番号の指摘 | 実装済 | 例: `(13, 24-26, 33-35行目)` |
 | 表形式での出力フォーマット | 実装済 | 関心の分離、カプセル化等の欠陥テーブル |
 | 設計観点のモジュール化 | 実装済 | DDD、Laravel、Clean Architecture選択可能 |
-| 言語別プロンプト | 実装済 | PHP、TypeScript、Go対応 |
+| 言語別プロンプト | 実装済 | PHP、TypeScript対応 |
 | Mermaidクラス図の出力形式 | 実装済 | 改善後のドメインモデル図 |
 | プロンプト外部ファイル化 | 実装済 | Markdown形式で編集可能 |
 
@@ -168,8 +164,7 @@ prompts/
 │   └── clean-architecture.md    # Clean Architecture
 ├── languages/                   # 言語固有の観点
 │   ├── php.md
-│   ├── typescript.md
-│   └── go.md
+│   └── typescript.md
 └── functions/                   # 将来の拡張用
 ```
 
