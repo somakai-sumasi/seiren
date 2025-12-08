@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Prompts\Functions;
 
 use App\PromptLoader;
-use App\Prompts\PromptResolver;
+use App\Prompts\Enums\Language;
+use App\Prompts\Enums\TestFramework;
 
 /**
  * テストコード生成プロンプト
@@ -14,45 +15,43 @@ final class TestCodeGeneration
 {
     private const TEMPLATE_BASE = 'functions/test-code-generation/base';
 
-    /** @var array<string, string> */
-    private const FRAMEWORK_GUIDE_MAP = [
-        'phpunit' => 'phpunit',
-    ];
-
-    /** @var array<string, string> */
-    private const LANGUAGE_GUIDE_MAP = [
-        'php' => 'php',
-        'typescript' => 'typescript',
-        'ts' => 'typescript',
-    ];
-
     /**
      * テストコード生成プロンプトを生成
      *
      * @param string $code 対象のコード
-     * @param string $testFramework テストフレームワーク
-     * @param string|null $language プログラミング言語
+     * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
+     * @param string|null $language プログラミング言語（php, typescript）
      */
     public static function generate(
         string $code,
         string $testFramework = 'PHPUnit',
         ?string $language = null
     ): string {
-        $frameworkGuide = PromptResolver::resolve(
-            self::FRAMEWORK_GUIDE_MAP,
-            $testFramework,
-            'functions/test-code-generation/frameworks'
-        );
+        $loader = PromptLoader::getInstance();
 
-        $languageGuide = $language !== null
-            ? PromptResolver::resolve(
-                self::LANGUAGE_GUIDE_MAP,
-                $language,
-                'functions/test-code-generation/languages'
-            )
-            : '';
+        // テストフレームワーク
+        $frameworkGuide = '';
+        $frameworkEnum = TestFramework::fromAlias($testFramework);
+        if ($frameworkEnum !== null) {
+            $path = $frameworkEnum->promptPath();
+            if ($loader->exists($path)) {
+                $frameworkGuide = $loader->getContent($path);
+            }
+        }
 
-        return PromptLoader::getInstance()->renderTemplate(self::TEMPLATE_BASE, [
+        // 言語ガイド
+        $languageGuide = '';
+        if ($language !== null) {
+            $languageEnum = Language::fromAlias($language);
+            if ($languageEnum !== null) {
+                $path = 'functions/test-code-generation/languages/' . $languageEnum->value;
+                if ($loader->exists($path)) {
+                    $languageGuide = $loader->getContent($path);
+                }
+            }
+        }
+
+        return $loader->renderTemplate(self::TEMPLATE_BASE, [
             'testFramework' => $testFramework,
             'frameworkGuide' => $frameworkGuide,
             'languageGuide' => $languageGuide,

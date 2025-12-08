@@ -7,20 +7,13 @@ namespace App\Prompts\Functions;
 use App\PromptLoader;
 use App\Prompts\Core\CorePrompts;
 use App\Prompts\Core\OutputFormats;
-use App\Prompts\PromptResolver;
+use App\Prompts\Enums\Perspective;
 
 /**
  * リファクタリング提案プロンプト
  */
 final class RefactoringSuggestion
 {
-    /** @var array<string, string> */
-    private const PERSPECTIVE_MAPPING = [
-        'ddd' => 'ddd',
-        'laravel' => 'laravel',
-        'clean' => 'clean-architecture',
-    ];
-
     private static function renderContext(string $context): string
     {
         if ($context === '') {
@@ -38,28 +31,33 @@ final class RefactoringSuggestion
      *
      * @param string $code 対象のコード
      * @param string $context 追加コンテキスト
-     * @param string|null $perspective 設計観点
+     * @param string|null $perspective 設計観点（ddd, laravel, clean）
      */
     public static function generate(
         string $code,
         string $context = '',
         ?string $perspective = null
     ): string {
+        $loader = PromptLoader::getInstance();
+
         $corePrompt = CorePrompts::all();
         $outputFormat = OutputFormats::forRefactoring();
 
         $contextSection = self::renderContext($context);
 
+        // 設計観点（Perspective）
         $perspectivePrompt = '';
         if ($perspective !== null) {
-            $perspectivePrompt = PromptResolver::resolve(
-                self::PERSPECTIVE_MAPPING,
-                $perspective,
-                'functions/refactoring-suggestion/perspectives'
-            );
+            $perspectiveEnum = Perspective::fromAlias($perspective);
+            if ($perspectiveEnum !== null) {
+                $path = 'functions/refactoring-suggestion/perspectives/' . $perspectiveEnum->value;
+                if ($loader->exists($path)) {
+                    $perspectivePrompt = $loader->getContent($path);
+                }
+            }
         }
 
-        return PromptLoader::getInstance()->renderTemplate('functions/refactoring-suggestion/base', [
+        return $loader->renderTemplate('functions/refactoring-suggestion/base', [
             'corePrompt' => $corePrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'contextSection' => $contextSection,
