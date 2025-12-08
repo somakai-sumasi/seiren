@@ -1,6 +1,8 @@
-# MCP Prompts Server
+# Seiren
 
 コード品質改善のためのプロンプトを提供するMCPサーバー
+
+「精錬」- コードを精錬し、より良い設計へ導く
 
 ## 参考プロジェクト: Modifius
 
@@ -309,9 +311,9 @@ public function myPrompt(string $arg): array
 ```json
 {
   "mcpServers": {
-    "code-quality": {
+    "seiren": {
       "command": "php",
-      "args": ["/Users/hoge/mcp-prompts-server/server.php"]
+      "args": ["/path/to/seiren/server.php"]
     }
   }
 }

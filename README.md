@@ -1,6 +1,8 @@
-# MCP Prompts Server
+# Seiren
 
 コード品質改善のためのプロンプトを提供するMCPサーバー
+
+「精錬」- コードを精錬し、より良い設計へ導く
 
 ## 概要
 
@@ -37,8 +39,8 @@ AIエージェント（Cursor、Claude Code等）と連携し、コードの品�
 ## インストール
 
 ```bash
-git clone https://github.com/your-username/mcp-prompts-server.git
-cd mcp-prompts-server
+git clone https://github.com/your-username/seiren.git
+cd seiren
 composer install
 ```
 
@@ -51,9 +53,9 @@ composer install
 ```json
 {
   "mcpServers": {
-    "code-quality": {
+    "seiren": {
       "command": "php",
-      "args": ["/path/to/mcp-prompts-server/server.php"]
+      "args": ["/path/to/seiren/server.php"]
     }
   }
 }

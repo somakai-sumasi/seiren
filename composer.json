@@ -1,6 +1,6 @@
 {
-    "name": "example/mcp-prompts-server",
-    "description": "MCP Server for code quality prompts",
+    "name": "example/seiren",
+    "description": "Seiren - MCP Server for code quality prompts",
     "type": "project",
     "require": {
         "php": "^8.2",
