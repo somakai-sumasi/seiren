@@ -106,11 +106,11 @@ DESC
      * テストコード生成プロンプト
      *
      * @param string $language 言語（php, typescript）
-     * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
+     * @param string $testFramework テストフレームワーク（PHPUnit）
      */
     #[McpTool(
         name: 'generate_test_code',
-        description: '高品質なテストコードを生成。PHPUnit、Jest、Vitest、pytest、Go testing等のフレームワークに対応。'
+        description: '高品質なテストコードを生成。PHPUnit、等のフレームワークに対応。'
     )]
     public function generateTestCode(
         string $language = '',
