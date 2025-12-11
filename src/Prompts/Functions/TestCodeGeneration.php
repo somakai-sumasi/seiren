@@ -18,7 +18,7 @@ final class TestCodeGeneration
     /**
      * テストコード生成プロンプトを生成
      *
-     * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
+     * @param string $testFramework テストフレームワーク（PHPUnit）
      * @param string|null $language プログラミング言語（php, typescript）
      */
     public static function generate(

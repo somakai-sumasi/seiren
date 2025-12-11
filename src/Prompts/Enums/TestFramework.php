@@ -10,10 +10,6 @@ namespace App\Prompts\Enums;
 enum TestFramework: string
 {
     case PHPUNIT = 'phpunit';
-    case JEST = 'jest';
-    case VITEST = 'vitest';
-    case PYTEST = 'pytest';
-    case GO = 'go';
 
     /**
      * エイリアスから解決
@@ -22,10 +18,6 @@ enum TestFramework: string
     {
         return match (strtolower($alias)) {
             'phpunit' => self::PHPUNIT,
-            'jest' => self::JEST,
-            'vitest' => self::VITEST,
-            'pytest' => self::PYTEST,
-            'go', 'gotest', 'go-test' => self::GO,
             default => null,
         };
     }
@@ -45,10 +37,6 @@ enum TestFramework: string
     {
         return match ($this) {
             self::PHPUNIT => 'PHPUnit',
-            self::JEST => 'Jest',
-            self::VITEST => 'Vitest',
-            self::PYTEST => 'pytest',
-            self::GO => 'Go testing',
         };
     }
 
@@ -59,6 +47,6 @@ enum TestFramework: string
      */
     public static function availableValues(): array
     {
-        return ['PHPUnit', 'Jest', 'Vitest', 'pytest', 'go'];
+        return ['PHPUnit'];
     }
 }
