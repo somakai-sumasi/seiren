@@ -29,12 +29,10 @@ final class RefactoringSuggestion
     /**
      * リファクタリング提案プロンプトを生成
      *
-     * @param string $code 対象のコード
      * @param string $context 追加コンテキスト
      * @param string|null $perspective 設計観点（ddd, laravel, clean）
      */
     public static function generate(
-        string $code,
         string $context = '',
         ?string $perspective = null
     ): string {
@@ -61,7 +59,6 @@ final class RefactoringSuggestion
             'corePrompt' => $corePrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'contextSection' => $contextSection,
-            'code' => $code,
             'outputFormat' => $outputFormat,
         ]);
     }

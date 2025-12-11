@@ -18,12 +18,10 @@ final class TestCodeGeneration
     /**
      * テストコード生成プロンプトを生成
      *
-     * @param string $code 対象のコード
      * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
      * @param string|null $language プログラミング言語（php, typescript）
      */
     public static function generate(
-        string $code,
         string $testFramework = 'PHPUnit',
         ?string $language = null
     ): string {
@@ -55,7 +53,6 @@ final class TestCodeGeneration
             'testFramework' => $testFramework,
             'frameworkGuide' => $frameworkGuide,
             'languageGuide' => $languageGuide,
-            'code' => $code,
         ]);
     }
 }

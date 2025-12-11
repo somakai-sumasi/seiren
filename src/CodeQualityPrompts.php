@@ -8,13 +8,26 @@ use App\Prompts\Functions\DebtAnalysis;
 use App\Prompts\Functions\RefactoringSuggestion;
 use App\Prompts\Functions\TestCodeGeneration;
 use Mcp\Capability\Attribute\McpTool;
+use Throwable;
 
 class CodeQualityPrompts
 {
+    private const LOG_FILE = __DIR__ . '/../logs/seiren.log';
+
+    private function log(string $message): void
+    {
+        $dir = dirname(self::LOG_FILE);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $timestamp = date('Y-m-d H:i:s');
+        $line = "[{$timestamp}] {$message}" . PHP_EOL;
+        file_put_contents(self::LOG_FILE, $line, FILE_APPEND | LOCK_EX);
+    }
     /**
      * 技術的負債分析プロンプト
      *
-     * @param string $code 分析対象のコード
      * @param string $language 言語（php, typescript）
      * @param string $perspective 設計観点（ddd, laravel, clean）
      * @param string $focus 分析観点（カンマ区切りで複数指定可）
@@ -43,28 +56,30 @@ class CodeQualityPrompts
 DESC
     )]
     public function analyzeTechnicalDebt(
-        string $code,
         string $language = '',
         string $perspective = '',
         string $focus = ''
     ): string {
-        // focusをパース（カンマ区切り）
-        $focuses = $focus !== ''
-            ? array_map('trim', explode(',', $focus))
-            : [];
+        try {
+            // focusをパース（カンマ区切り）
+            $focuses = $focus !== ''
+                ? array_map('trim', explode(',', $focus))
+                : [];
 
-        return DebtAnalysis::generate(
-            $code,
-            $perspective !== '' ? $perspective : null,
-            $language !== '' ? $language : null,
-            $focuses
-        );
+            return DebtAnalysis::generate(
+                $perspective !== '' ? $perspective : null,
+                $language !== '' ? $language : null,
+                $focuses
+            );
+        } catch (Throwable $e) {
+            $this->log("analyzeTechnicalDebt ERROR - msg:{$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
+            throw $e;
+        }
     }
 
     /**
      * リファクタリング提案プロンプト
      *
-     * @param string $code 対象のコード
      * @param string $context 追加コンテキスト
      * @param string $perspective 設計観点（ddd, laravel, clean）
      */
@@ -73,21 +88,23 @@ DESC
         description: '設計改善案をテーブル形式とMermaidクラス図で提案。DDD、Laravel、Clean Architecture等の観点を選択可能。'
     )]
     public function suggestRefactoring(
-        string $code,
         string $context = '',
         string $perspective = ''
     ): string {
-        return RefactoringSuggestion::generate(
-            $code,
-            $context,
-            $perspective !== '' ? $perspective : null
-        );
+        try {
+            return RefactoringSuggestion::generate(
+                $context,
+                $perspective !== '' ? $perspective : null
+            );
+        } catch (Throwable $e) {
+            $this->log("suggestRefactoring ERROR - msg:{$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
+            throw $e;
+        }
     }
 
     /**
      * テストコード生成プロンプト
      *
-     * @param string $code 対象のコード
      * @param string $language 言語（php, typescript）
      * @param string $testFramework テストフレームワーク（PHPUnit, Jest, Vitest, pytest, go）
      */
@@ -96,14 +113,17 @@ DESC
         description: '高品質なテストコードを生成。PHPUnit、Jest、Vitest、pytest、Go testing等のフレームワークに対応。'
     )]
     public function generateTestCode(
-        string $code,
         string $language = '',
         string $testFramework = 'PHPUnit'
     ): string {
-        return TestCodeGeneration::generate(
-            $code,
-            $testFramework,
-            $language !== '' ? $language : null
-        );
+        try {
+            return TestCodeGeneration::generate(
+                $testFramework,
+                $language !== '' ? $language : null
+            );
+        } catch (Throwable $e) {
+            $this->log("generateTestCode ERROR - msg:{$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
+            throw $e;
+        }
     }
 }

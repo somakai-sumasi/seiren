@@ -19,13 +19,11 @@ final class DebtAnalysis
     /**
      * 技術的負債分析プロンプトを生成
      *
-     * @param string $code 分析対象のコード
      * @param string|null $perspective 設計観点（ddd, laravel, clean）
      * @param string|null $language プログラミング言語（php, typescript）
      * @param list<string> $focuses 分析観点のリスト（グループまたは個別観点）
      */
     public static function generate(
-        string $code,
         ?string $perspective = null,
         ?string $language = null,
         array $focuses = []
@@ -71,7 +69,6 @@ final class DebtAnalysis
             'antipatternsPrompt' => $antipatternsPrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'languagePrompt' => $languagePrompt,
-            'code' => $code,
             'outputFormat' => $outputFormat,
         ]);
     }
