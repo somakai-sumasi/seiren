@@ -20,3 +20,27 @@ description: Clean Architecture の設計観点
 - Entityからインフラ層への依存
 - Interface Adapterでのビジネスロジック実装
 - 依存性逆転原則の違反
+
+## 改善の方向性
+- 依存の方向を内側に向ける
+- フレームワーク依存の分離
+- インターフェースによる依存性逆転
+- UseCaseの単一責任化
+
+## 推奨構成
+```
+src/
+├── Domain/              # Enterprise Business Rules
+│   ├── Entities/
+│   └── ValueObjects/
+├── Application/         # Application Business Rules
+│   ├── UseCases/
+│   └── Interfaces/      # Ports (Input/Output)
+├── Adapter/             # Interface Adapters
+│   ├── Controllers/
+│   ├── Presenters/
+│   └── Gateways/
+└── Infrastructure/      # Frameworks & Drivers
+    ├── Persistence/
+    └── External/
+```

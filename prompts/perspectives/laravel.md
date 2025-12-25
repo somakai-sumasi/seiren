@@ -21,3 +21,9 @@ description: Laravel アーキテクチャの設計観点
 - Facadeの乱用による結合度上昇
 - ControllerでのEloquent直接操作
 - FormRequest内でのビジネスルール実装
+
+## 改善の方向性
+- Controllerのスリム化（UseCaseへの委譲）
+- Eloquent ModelからDomain Modelの分離
+- FormRequestでのバリデーション集約
+- Repositoryパターンの導入

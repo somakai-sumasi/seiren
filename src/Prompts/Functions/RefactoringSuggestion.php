@@ -48,10 +48,7 @@ final class RefactoringSuggestion
         if ($perspective !== null) {
             $perspectiveEnum = Perspective::fromAlias($perspective);
             if ($perspectiveEnum !== null) {
-                $path = 'functions/refactoring-suggestion/perspectives/' . $perspectiveEnum->value;
-                if ($loader->exists($path)) {
-                    $perspectivePrompt = $loader->getContent($path);
-                }
+                $perspectivePrompt = $loader->getContent($perspectiveEnum->promptPath());
             }
         }
 
