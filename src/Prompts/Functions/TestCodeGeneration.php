@@ -18,10 +18,12 @@ final class TestCodeGeneration
     /**
      * テストコード生成プロンプトを生成
      *
+     * @param string $code テスト対象コード
      * @param string $testFramework テストフレームワーク（PHPUnit）
      * @param string|null $language プログラミング言語（php, typescript）
      */
     public static function generate(
+        string $code = '',
         string $testFramework = 'PHPUnit',
         ?string $language = null
     ): string {
@@ -49,10 +51,27 @@ final class TestCodeGeneration
             }
         }
 
+        // 対象コードセクション
+        $targetCode = self::buildTargetCodeSection($code);
+
         return $loader->renderTemplate(self::TEMPLATE_BASE, [
             'testFramework' => $testFramework,
             'frameworkGuide' => $frameworkGuide,
             'languageGuide' => $languageGuide,
+            'targetCode' => $targetCode,
+        ]);
+    }
+
+    private static function buildTargetCodeSection(string $code): string
+    {
+        $loader = PromptLoader::getInstance();
+
+        if ($code === '') {
+            return $loader->getContent('functions/test-code-generation/target-code-fallback');
+        }
+
+        return $loader->renderTemplate('functions/test-code-generation/target-code', [
+            'code' => $code,
         ]);
     }
 }

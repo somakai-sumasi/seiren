@@ -39,13 +39,13 @@ class CodeQualityPrompts
 
 【focus引数 - 分析観点の指定】
 グループ指定:
-  - basic: カプセル化, 関心の分離, 命名（デフォルト）
+  - basic: カプセル化, 関心の分離, 命名(デフォルト)
   - structure: ドメインモデル, レイヤ分離, データモデル層, Repository層, Service層, interface設計
   - quality: 不変性, 凝集性, 結合度, 条件分岐
   - antipatterns: 生焼けオブジェクト, デッドコード, null問題等
   - all: 全ての観点
 
-個別指定（カンマ区切り）:
+個別指定(カンマ区切り):
   encapsulation, separation-of-concerns, naming,
   domain-model-completeness, layer-separation,
   layer-data-model, layer-repository, layer-service, interface-design,
@@ -57,6 +57,7 @@ class CodeQualityPrompts
 DESC
     )]
     public function analyzeTechnicalDebt(
+        string $code = '',
         string $language = '',
         string $perspective = '',
         string $focus = ''
@@ -68,6 +69,7 @@ DESC
                 : [];
 
             return DebtAnalysis::generate(
+                $code,
                 $perspective !== '' ? $perspective : null,
                 $language !== '' ? $language : null,
                 $focuses
@@ -89,11 +91,13 @@ DESC
         description: '設計改善案をテーブル形式とMermaidクラス図で提案。DDD、Laravel、Clean Architecture等の観点を選択可能。'
     )]
     public function suggestRefactoring(
+        string $code = '',
         string $context = '',
         string $perspective = ''
     ): string {
         try {
             return RefactoringSuggestion::generate(
+                $code,
                 $context,
                 $perspective !== '' ? $perspective : null
             );
@@ -114,11 +118,13 @@ DESC
         description: '高品質なテストコードを生成。PHPUnit、等のフレームワークに対応。'
     )]
     public function generateTestCode(
+        string $code = '',
         string $language = '',
         string $testFramework = 'PHPUnit'
     ): string {
         try {
             return TestCodeGeneration::generate(
+                $code,
                 $testFramework,
                 $language !== '' ? $language : null
             );

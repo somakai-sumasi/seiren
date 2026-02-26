@@ -29,10 +29,12 @@ final class RefactoringSuggestion
     /**
      * リファクタリング提案プロンプトを生成
      *
+     * @param string $code 分析対象コード
      * @param string $context 追加コンテキスト
      * @param string|null $perspective 設計観点（ddd, laravel, clean）
      */
     public static function generate(
+        string $code = '',
         string $context = '',
         ?string $perspective = null
     ): string {
@@ -52,11 +54,28 @@ final class RefactoringSuggestion
             }
         }
 
+        // 対象コードセクション
+        $targetCode = self::buildTargetCodeSection($code);
+
         return $loader->renderTemplate('functions/refactoring-suggestion/base', [
             'corePrompt' => $corePrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'contextSection' => $contextSection,
             'outputFormat' => $outputFormat,
+            'targetCode' => $targetCode,
+        ]);
+    }
+
+    private static function buildTargetCodeSection(string $code): string
+    {
+        $loader = PromptLoader::getInstance();
+
+        if ($code === '') {
+            return $loader->getContent('functions/refactoring-suggestion/target-code-fallback');
+        }
+
+        return $loader->renderTemplate('functions/refactoring-suggestion/target-code', [
+            'code' => $code,
         ]);
     }
 }
