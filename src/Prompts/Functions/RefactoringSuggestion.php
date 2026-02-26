@@ -68,10 +68,14 @@ final class RefactoringSuggestion
 
     private static function buildTargetCodeSection(string $code): string
     {
+        $loader = PromptLoader::getInstance();
+
         if ($code === '') {
-            return '会話コンテキスト内の対象コードを分析し、上記の基準に従って設計改善案を提案してください。';
+            return $loader->getContent('functions/refactoring-suggestion/target-code-fallback');
         }
 
-        return "```\n" . $code . "\n```\n\n上記のコードを分析し、設計改善案を提案してください。";
+        return $loader->renderTemplate('functions/refactoring-suggestion/target-code', [
+            'code' => $code,
+        ]);
     }
 }

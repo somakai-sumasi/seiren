@@ -64,10 +64,14 @@ final class TestCodeGeneration
 
     private static function buildTargetCodeSection(string $code): string
     {
+        $loader = PromptLoader::getInstance();
+
         if ($code === '') {
-            return '会話コンテキスト内のテスト対象コードを読み込み、上記の原則に従ってテストコードを生成してください。';
+            return $loader->getContent('functions/test-code-generation/target-code-fallback');
         }
 
-        return "```\n" . $code . "\n```\n\n上記のコードに対してテストコードを生成してください。";
+        return $loader->renderTemplate('functions/test-code-generation/target-code', [
+            'code' => $code,
+        ]);
     }
 }

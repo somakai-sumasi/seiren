@@ -81,11 +81,15 @@ final class DebtAnalysis
 
     private static function buildTargetCodeSection(string $code): string
     {
+        $loader = PromptLoader::getInstance();
+
         if ($code === '') {
-            return "会話コンテキスト内の対象コードを分析してください。\n行番号を参照できるよう、コードの各行を把握した上で欠陥を特定してください。";
+            return $loader->getContent('functions/debt-analysis/target-code-fallback');
         }
 
-        return "```\n" . $code . "\n```\n\n行番号を参照できるよう、コードの各行を把握した上で欠陥を特定してください。";
+        return $loader->renderTemplate('functions/debt-analysis/target-code', [
+            'code' => $code,
+        ]);
     }
 
     /**
