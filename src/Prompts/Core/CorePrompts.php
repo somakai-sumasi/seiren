@@ -46,11 +46,11 @@ final class CorePrompts
     }
 
     /**
-     * Model層の責務定義
+     * データモデル層の責務定義
      */
-    public static function layerModel(): string
+    public static function layerDataModel(): string
     {
-        return PromptLoader::getInstance()->getContent('core/layer-model');
+        return PromptLoader::getInstance()->getContent('core/layer-data-model');
     }
 
     /**

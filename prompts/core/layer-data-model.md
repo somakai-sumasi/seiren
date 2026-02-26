@@ -1,7 +1,7 @@
 ---
-name: layer-model
+name: layer-data-model
 category: core
-description: Model層（データモデル / Eloquent Model等）の責務定義と判断基準
+description: データモデル層（ORMモデル等）の責務定義と判断基準
 ---
 
 ## Model層（データモデル）の責務定義
@@ -10,7 +10,9 @@ description: Model層（データモデル / Eloquent Model等）の責務定義
 
 Model層とは、データベースのテーブルに対応し、
 データの永続化・取得・リレーション定義を担うオブジェクトの層である。
-LaravelにおけるEloquent Model、RubyにおけるActiveRecord等がこれにあたる。
+LaravelにおけるORMモデル、Ruby on RailsにおけるActiveRecord、
+SymfonyにおけるDoctrine Entity、TypeORMにおけるEntity等、
+各フレームワークのORMモデルがこれにあたる。
 
 Model層はアプリケーションにおける「データ構造の表現」と
 「永続化に直結する操作」の責務を持ち、

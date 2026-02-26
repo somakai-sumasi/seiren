@@ -30,7 +30,7 @@ Service層は「何をするか」「それが許可されるか」を判断す�
 
 ### Service層が持ってはいけない責務
 
-- 永続化の実装詳細（SQL構築、Eloquent操作、ファイルI/O — これはRepository層の責務）
+- 永続化の実装詳細（SQL構築、ORM操作、ファイルI/O — これはRepository層の責務）
 - HTTPリクエスト/レスポンスの処理（これはController/プレゼンテーション層の責務）
 - 入力値のフォーマットバリデーション（これはFormRequest等のバリデーション層の責務）
 - テーブル構造やカラム名への依存（これはデータモデル/Repository層の関心事）
@@ -50,7 +50,7 @@ Service層は「何をするか」「それが許可されるか」を判断す�
 
 3. **永続化との分離**
    - Service層がRepository経由でデータの取得・保存を行っているか
-   - Service層内でEloquent Modelを直接操作（where、save、delete等）していないか
+   - Service層内でORMモデルを直接操作（where、save、delete等）していないか
    - Service層がテーブル構造やカラム名を知っていないか
 
 4. **Service層の肥大化**
@@ -69,7 +69,7 @@ Service層は「何をするか」「それが許可されるか」を判断す�
 
 ### 欠陥パターン
 
-- **永続化操作の混入**: Service層内でEloquent Modelのsave()、create()、where()等を直接呼び出しており、永続化の実装詳細がService層に漏れている。永続化はRepository経由で行うべき
+- **永続化操作の混入**: Service層内でORMモデルのsave()、create()、where()等を直接呼び出しており、永続化の実装詳細がService層に漏れている。永続化はRepository経由で行うべき
 - **ファットサービス（Fat Service）**: 1つのServiceクラスに大量のメソッドと依存が集中し、単一責任原則に違反している。ユースケース単位やドメイン領域単位でServiceを分割すべき
 - **手続き的な処理**: エンティティのgetterでデータを取り出し、Service内で計算・判定を行い、結果をsetterで書き戻すような手続き的なコード。ビジネスロジックはエンティティの振る舞いとして実装し、Service層はその呼び出しを調整する役割に留めるべき
 - **Controller層の責務混入**: Service層がRequestオブジェクトを受け取ったり、HTTPステータスコードを返したり、レスポンスの整形を行ったりしている
