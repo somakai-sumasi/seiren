@@ -19,11 +19,13 @@ final class DebtAnalysis
     /**
      * 技術的負債分析プロンプトを生成
      *
+     * @param string $code 分析対象コード
      * @param string|null $perspective 設計観点（ddd, laravel, clean）
      * @param string|null $language プログラミング言語（php, typescript）
      * @param list<string> $focuses 分析観点のリスト（グループまたは個別観点）
      */
     public static function generate(
+        string $code = '',
         ?string $perspective = null,
         ?string $language = null,
         array $focuses = []
@@ -64,13 +66,26 @@ final class DebtAnalysis
             }
         }
 
+        // 対象コードセクション
+        $targetCode = self::buildTargetCodeSection($code);
+
         return $loader->renderTemplate('functions/debt-analysis/base', [
             'corePrompt' => $corePrompt,
             'antipatternsPrompt' => $antipatternsPrompt,
             'perspectivePrompt' => $perspectivePrompt,
             'languagePrompt' => $languagePrompt,
             'outputFormat' => $outputFormat,
+            'targetCode' => $targetCode,
         ]);
+    }
+
+    private static function buildTargetCodeSection(string $code): string
+    {
+        if ($code === '') {
+            return "会話コンテキスト内の対象コードを分析してください。\n行番号を参照できるよう、コードの各行を把握した上で欠陥を特定してください。";
+        }
+
+        return "```\n" . $code . "\n```\n\n行番号を参照できるよう、コードの各行を把握した上で欠陥を特定してください。";
     }
 
     /**

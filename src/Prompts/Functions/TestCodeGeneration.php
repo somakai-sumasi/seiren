@@ -18,10 +18,12 @@ final class TestCodeGeneration
     /**
      * テストコード生成プロンプトを生成
      *
+     * @param string $code テスト対象コード
      * @param string $testFramework テストフレームワーク（PHPUnit）
      * @param string|null $language プログラミング言語（php, typescript）
      */
     public static function generate(
+        string $code = '',
         string $testFramework = 'PHPUnit',
         ?string $language = null
     ): string {
@@ -49,10 +51,23 @@ final class TestCodeGeneration
             }
         }
 
+        // 対象コードセクション
+        $targetCode = self::buildTargetCodeSection($code);
+
         return $loader->renderTemplate(self::TEMPLATE_BASE, [
             'testFramework' => $testFramework,
             'frameworkGuide' => $frameworkGuide,
             'languageGuide' => $languageGuide,
+            'targetCode' => $targetCode,
         ]);
+    }
+
+    private static function buildTargetCodeSection(string $code): string
+    {
+        if ($code === '') {
+            return '会話コンテキスト内のテスト対象コードを読み込み、上記の原則に従ってテストコードを生成してください。';
+        }
+
+        return "```\n" . $code . "\n```\n\n上記のコードに対してテストコードを生成してください。";
     }
 }
