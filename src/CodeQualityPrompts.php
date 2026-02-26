@@ -40,14 +40,15 @@ class CodeQualityPrompts
 【focus引数 - 分析観点の指定】
 グループ指定:
   - basic: カプセル化, 関心の分離, 命名（デフォルト）
-  - structure: ドメインモデル, レイヤ分離, interface設計
+  - structure: ドメインモデル, レイヤ分離, データモデル層, Repository層, Service層, interface設計
   - quality: 不変性, 凝集性, 結合度, 条件分岐
   - antipatterns: 生焼けオブジェクト, デッドコード, null問題等
   - all: 全ての観点
 
 個別指定（カンマ区切り）:
   encapsulation, separation-of-concerns, naming,
-  domain-model-completeness, layer-separation, interface-design,
+  domain-model-completeness, layer-separation,
+  layer-data-model, layer-repository, layer-service, interface-design,
   immutability, cohesion, coupling, conditional-branching,
   half-baked-object, method-chain, dead-code, magic-number,
   null-problem, exception-abuse, god-class

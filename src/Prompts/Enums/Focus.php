@@ -17,6 +17,9 @@ enum Focus: string
     // === Core: Structure ===
     case DOMAIN_MODEL = 'domain-model-completeness';
     case LAYER_SEPARATION = 'layer-separation';
+    case LAYER_DATA_MODEL = 'layer-data-model';
+    case LAYER_REPOSITORY = 'layer-repository';
+    case LAYER_SERVICE = 'layer-service';
     case INTERFACE_DESIGN = 'interface-design';
 
     // === Core: Quality ===
@@ -82,6 +85,9 @@ enum Focus: string
             self::NAMING => '命名設計',
             self::DOMAIN_MODEL => 'ドメインモデル完全性',
             self::LAYER_SEPARATION => 'レイヤ分離',
+            self::LAYER_DATA_MODEL => 'データモデル層',
+            self::LAYER_REPOSITORY => 'Repository層',
+            self::LAYER_SERVICE => 'Service層',
             self::INTERFACE_DESIGN => 'interface設計',
             self::IMMUTABILITY => '不変性',
             self::COHESION => '凝集性',
