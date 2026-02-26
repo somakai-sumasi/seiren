@@ -31,6 +31,9 @@ enum FocusGroup: string
             self::STRUCTURE => [
                 Focus::DOMAIN_MODEL,
                 Focus::LAYER_SEPARATION,
+                Focus::LAYER_MODEL,
+                Focus::LAYER_REPOSITORY,
+                Focus::LAYER_SERVICE,
                 Focus::INTERFACE_DESIGN,
             ],
             self::QUALITY => [
@@ -59,7 +62,7 @@ enum FocusGroup: string
     {
         return match ($this) {
             self::BASIC => 'basic (カプセル化, 関心の分離, 命名)',
-            self::STRUCTURE => 'structure (ドメインモデル, レイヤ分離, interface設計)',
+            self::STRUCTURE => 'structure (ドメインモデル, レイヤ分離, Model層, Repository層, Service層, interface設計)',
             self::QUALITY => 'quality (不変性, 凝集性, 結合度, 条件分岐)',
             self::ANTIPATTERNS => 'antipatterns (生焼けオブジェクト, デッドコード等)',
             self::ALL => 'all (全ての観点)',

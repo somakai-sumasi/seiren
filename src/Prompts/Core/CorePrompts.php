@@ -46,6 +46,30 @@ final class CorePrompts
     }
 
     /**
+     * Model層の責務定義
+     */
+    public static function layerModel(): string
+    {
+        return PromptLoader::getInstance()->getContent('core/layer-model');
+    }
+
+    /**
+     * Repository層の責務定義
+     */
+    public static function layerRepository(): string
+    {
+        return PromptLoader::getInstance()->getContent('core/layer-repository');
+    }
+
+    /**
+     * Service層の責務定義
+     */
+    public static function layerService(): string
+    {
+        return PromptLoader::getInstance()->getContent('core/layer-service');
+    }
+
+    /**
      * interface設計の原則
      */
     public static function interfaceDesign(): string
