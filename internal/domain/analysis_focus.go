@@ -1,5 +1,18 @@
 package domain
 
+import "strings"
+
+func ParseFocusInput(input string) []string {
+	if input == "" {
+		return nil
+	}
+	var focuses []string
+	for _, f := range strings.Split(input, ",") {
+		focuses = append(focuses, strings.TrimSpace(f))
+	}
+	return focuses
+}
+
 type ResolvedFocuses struct {
 	Core         []Focus
 	Antipatterns []Focus

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/spf13/cobra"
 
+	"seiren/internal/domain"
 	"seiren/internal/functions"
 	"seiren/internal/promptloader"
+	"seiren/prompts"
 )
 
 func main() {
@@ -31,18 +31,7 @@ func main() {
 }
 
 func initPromptLoader() {
-	exec, err := os.Executable()
-	var promptsPath string
-	if err == nil {
-		p := filepath.Join(filepath.Dir(exec), "prompts")
-		if info, statErr := os.Stat(p); statErr == nil && info.IsDir() {
-			promptsPath = p
-		}
-	}
-	if promptsPath == "" {
-		promptsPath = filepath.Join(".", "prompts")
-	}
-	promptloader.GetInstance(promptsPath)
+	promptloader.Init(prompts.FS)
 }
 
 func readCode(code, file string) (string, error) {
@@ -79,12 +68,7 @@ func newAnalyzeCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			var focuses []string
-			if focus != "" {
-				for _, f := range strings.Split(focus, ",") {
-					focuses = append(focuses, strings.TrimSpace(f))
-				}
-			}
+			focuses := domain.ParseFocusInput(focus)
 			result := functions.GenerateDebtAnalysis(c, perspective, language, focuses)
 			fmt.Print(result)
 			return nil

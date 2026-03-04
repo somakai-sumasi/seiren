@@ -6,7 +6,7 @@ import (
 )
 
 func GenerateRefactoringSuggestion(code, context, perspective string) string {
-	loader := promptloader.GetInstance()
+	loader := promptloader.Get()
 
 	corePrompt := domain.CorePromptsAll(loader)
 	outputFormat := domain.OutputFormatsForRefactoring(loader)
