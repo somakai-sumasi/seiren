@@ -7,8 +7,8 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
-	"seiren/promptloader"
-	"seiren/tools"
+	"seiren/internal/mcpserver"
+	"seiren/internal/promptloader"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	)
 
 	// ツールを登録
-	tools.RegisterTools(s)
+	mcpserver.RegisterTools(s)
 
 	// Stdio transport で起動
 	if err := server.ServeStdio(s); err != nil {

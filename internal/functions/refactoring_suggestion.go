@@ -1,8 +1,8 @@
 package functions
 
 import (
-	"seiren/promptloader"
-	"seiren/domain"
+	"seiren/internal/promptloader"
+	"seiren/internal/domain"
 )
 
 func GenerateRefactoringSuggestion(code, context, perspective string) string {
