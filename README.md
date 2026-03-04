@@ -34,18 +34,37 @@ AIエージェント（Cursor、Claude Code等）と連携し、コードの品�
 
 - Go 1.25+
 - [mcp-go](https://github.com/mark3labs/mcp-go) v0.44.1
+- [cobra](https://github.com/spf13/cobra) (CLI)
 
 ## インストール
 
 ```bash
-git clone https://github.com/your-username/seiren.git
+git clone https://github.com/somakai-sumasi/seiren.git
 cd seiren
-go build -o seiren ./
+go build -o seiren ./cmd/cli/         # CLI
+go build -o seiren-mcp ./cmd/mcp/     # MCP サーバー
 ```
 
 ## 使い方
 
-### Claude Code での利用
+### CLI として
+
+```bash
+# 技術的負債分析
+./seiren analyze --file target.php --language php --perspective ddd
+
+# リファクタリング提案
+./seiren refactor --code "class Foo { ... }" --perspective clean
+
+# テストコード生成
+cat target.php | ./seiren test --language php
+
+# ヘルプ
+./seiren --help
+./seiren analyze --help
+```
+
+### MCP サーバーとして（Claude Code等）
 
 `~/.claude.json` に追加:
 
@@ -53,27 +72,25 @@ go build -o seiren ./
 {
   "mcpServers": {
     "seiren": {
-      "command": "/path/to/seiren/seiren"
+      "command": "/path/to/seiren/seiren-mcp"
     }
   }
 }
 ```
 
-## コマンド
-
-```bash
-# ビルド
-go build -o seiren ./
-
-# サーバー起動（テスト用）
-./seiren
-```
-
 ## ディレクトリ構成
 
 ```
-├── main.go                     # エントリーポイント
-├── go.mod
+├── cmd/
+│   ├── cli/                    # CLIエントリーポイント → seiren バイナリ
+│   │   └── main.go
+│   └── mcp/                    # MCPサーバーエントリーポイント → seiren-mcp バイナリ
+│       └── main.go
+├── internal/
+│   ├── domain/                 # ドメイン型定義（Focus, Language等）
+│   ├── functions/              # プロンプト生成ロジック（CLI・MCP共有）
+│   ├── promptloader/           # Markdownファイル読み込み・キャッシュ
+│   └── mcpserver/              # MCPツール定義
 ├── prompts/                    # プロンプト定義（Markdownファイル）
 │   ├── core/                   # コアプロンプト
 │   ├── antipatterns/           # アンチパターン検出
@@ -81,10 +98,7 @@ go build -o seiren ./
 │   ├── perspectives/           # 設計観点（DDD, Laravel等）
 │   ├── languages/              # 言語固有（PHP, TypeScript等）
 │   └── functions/              # 機能別プロンプト
-├── domain/                     # ドメイン型定義（Focus, Language等）
-├── functions/                  # プロンプト生成ロジック
-├── promptloader/               # Markdownファイル読み込み・キャッシュ
-└── tools/                      # MCPツール定義
+└── go.mod
 ```
 
 ## プロンプトのカスタマイズ

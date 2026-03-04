@@ -1,4 +1,4 @@
-package tools
+package mcpserver
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
-	"seiren/functions"
+	"seiren/internal/functions"
 )
 
 func RegisterTools(s *server.MCPServer) {

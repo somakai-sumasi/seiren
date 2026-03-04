@@ -220,22 +220,39 @@ description: カプセル化の定義と判断基準
 
 - Go 1.25+
 - [mcp-go](https://github.com/mark3labs/mcp-go) v0.44.1
+- [cobra](https://github.com/spf13/cobra) (CLI)
 
 ## コマンド
 
 ```bash
-# ビルド
-go build -o seiren ./
+# CLIビルド
+go build -o seiren ./cmd/cli/
 
-# サーバー起動（テスト用）
-./seiren
+# MCPサーバービルド
+go build -o seiren-mcp ./cmd/mcp/
+
+# CLI使用例
+./seiren analyze --file example.php --language php --perspective ddd
+./seiren refactor --file example.php --perspective clean
+cat example.php | ./seiren test --language php
+
+# MCPサーバー起動（テスト用）
+./seiren-mcp
 ```
 
 ## ディレクトリ構成
 
 ```
-├── main.go                     # エントリーポイント
-├── go.mod
+├── cmd/
+│   ├── cli/                    # CLIエントリーポイント → seiren バイナリ
+│   │   └── main.go
+│   └── mcp/                    # MCPサーバーエントリーポイント → seiren-mcp バイナリ
+│       └── main.go
+├── internal/
+│   ├── domain/                 # ドメイン型定義（Focus, Language等）
+│   ├── functions/              # プロンプト生成ロジック（CLI・MCP共有）
+│   ├── promptloader/           # Markdownファイル読み込み・キャッシュ
+│   └── mcpserver/              # MCPツール定義
 ├── prompts/                    # プロンプト定義（Markdownファイル）
 │   ├── core/                   # コアプロンプト
 │   ├── antipatterns/           # アンチパターン検出
@@ -243,13 +260,12 @@ go build -o seiren ./
 │   ├── perspectives/           # 設計観点（DDD, Laravel等）
 │   ├── languages/              # 言語固有（PHP, TypeScript等）
 │   └── functions/              # 機能別プロンプト
-├── domain/                     # ドメイン型定義（Focus, Language等）
-├── functions/                  # プロンプト生成ロジック
-├── promptloader/               # Markdownファイル読み込み・キャッシュ
-└── tools/                      # MCPツール定義
+└── go.mod
 ```
 
 ## Claude Code での利用
+
+### MCP サーバーとして
 
 `~/.claude.json` に追加:
 
@@ -257,8 +273,21 @@ go build -o seiren ./
 {
   "mcpServers": {
     "seiren": {
-      "command": "/path/to/seiren/seiren"
+      "command": "/path/to/seiren/seiren-mcp"
     }
   }
 }
+```
+
+### CLI として
+
+```bash
+# 技術的負債分析
+./seiren analyze --code "対象コード" --language php --focus basic
+
+# リファクタリング提案
+./seiren refactor --file target.php --perspective ddd
+
+# テストコード生成
+cat target.php | ./seiren test --language php
 ```

@@ -4,5 +4,6 @@
 .env
 /.serena
 /.claude
-# Go
+# Go binaries
 /seiren
+/seiren-mcp

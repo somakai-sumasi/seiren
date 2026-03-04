@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"seiren/promptloader"
+	"seiren/internal/promptloader"
 	"strings"
 )
 
