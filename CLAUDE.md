@@ -141,7 +141,7 @@ Modifiusを参考に、変更容易性を高めるプロンプト群を提供す
 ### プロンプト外部ファイル化（実装済み）
 
 プロンプトはMarkdown + YAML Front Matter形式で外部ファイル化されている。
-PHPコードを編集せずにプロンプトの内容を変更可能。
+Goコードを編集せずにプロンプトの内容を変更可能。
 
 ```
 prompts/
@@ -185,11 +185,7 @@ prompts/
     │   └── base.md              # 負債分析ベース
     ├── refactoring-suggestion/
     │   ├── base.md              # リファクタリング提案ベース
-    │   ├── context.md           # コンテキスト定義
-    │   └── perspectives/        # 観点別
-    │       ├── ddd.md
-    │       ├── laravel.md
-    │       └── clean-architecture.md
+    │   └── context.md           # コンテキスト定義
     └── test-code-generation/
         ├── base.md              # テストコード生成ベース
         ├── frameworks/
@@ -217,32 +213,29 @@ description: カプセル化の定義と判断基準
 ### プロンプトの編集方法
 
 1. `prompts/` 内の該当Markdownファイルを直接編集
-2. PHPコードの変更は不要
+2. Goコードの変更は不要
 3. Front Matter（`---`で囲まれた部分）はメタデータ、それ以下が実際のプロンプト内容
 
 ## 技術スタック
 
-- PHP 8.2+
-- mcp/sdk v0.1
-- PHPStan (静的解析)
+- Go 1.25+
+- [mcp-go](https://github.com/mark3labs/mcp-go) v0.44.1
 
 ## コマンド
 
 ```bash
-# 依存関係インストール
-composer install
-
-# 静的解析
-php -d memory_limit=512M ./vendor/bin/phpstan analyse src server.php --level=max
+# ビルド
+go build -o seiren ./
 
 # サーバー起動（テスト用）
-php server.php
+./seiren
 ```
 
 ## ディレクトリ構成
 
 ```
-├── server.php                  # エントリーポイント
+├── main.go                     # エントリーポイント
+├── go.mod
 ├── prompts/                    # プロンプト定義（Markdownファイル）
 │   ├── core/                   # コアプロンプト
 │   ├── antipatterns/           # アンチパターン検出
@@ -250,59 +243,11 @@ php server.php
 │   ├── perspectives/           # 設計観点（DDD, Laravel等）
 │   ├── languages/              # 言語固有（PHP, TypeScript等）
 │   └── functions/              # 機能別プロンプト
-├── src/
-│   ├── PromptLoader.php        # Markdownプロンプト読み込み
-│   ├── CodeQualityPrompts.php  # MCPプロンプト定義
-│   └── Prompts/
-│       ├── AnalysisFocus.php       # 分析フォーカス定義
-│       ├── Core/
-│       │   ├── CorePrompts.php     # コアプロンプト呼び出し
-│       │   └── OutputFormats.php   # 出力フォーマット呼び出し
-│       ├── Enums/                  # 列挙型定義
-│       │   ├── Focus.php           # フォーカス種別
-│       │   ├── FocusGroup.php      # フォーカスグループ
-│       │   ├── Language.php        # 対応言語
-│       │   ├── Perspective.php     # 設計観点
-│       │   └── TestFramework.php   # テストフレームワーク
-│       └── Functions/
-│           ├── DebtAnalysis.php           # 技術的負債分析
-│           ├── RefactoringSuggestion.php  # リファクタリング提案
-│           └── TestCodeGeneration.php     # テストコード生成
-├── composer.json
-└── vendor/
+├── domain/                     # ドメイン型定義（Focus, Language等）
+├── functions/                  # プロンプト生成ロジック
+├── promptloader/               # Markdownファイル読み込み・キャッシュ
+└── tools/                      # MCPツール定義
 ```
-
-## MCP SDK の使い方
-
-### プロンプト定義
-
-```php
-use Mcp\Capability\Attribute\McpPrompt;
-use Mcp\Schema\Content\PromptMessage;
-use Mcp\Schema\Content\TextContent;
-use Mcp\Schema\Enum\Role;
-
-/**
- * @return list<PromptMessage>
- */
-#[McpPrompt(name: 'prompt_name', description: '説明')]
-public function myPrompt(string $arg): array
-{
-    return [
-        new PromptMessage(
-            role: Role::User,
-            content: new TextContent(text: 'プロンプト内容')
-        )
-    ];
-}
-```
-
-### 名前空間
-
-- サーバー: `Mcp\Server`
-- トランスポート: `Mcp\Server\Transport\StdioTransport`
-- 属性: `Mcp\Capability\Attribute\McpPrompt`
-- スキーマ: `Mcp\Schema\Content\*`, `Mcp\Schema\Enum\*`
 
 ## Claude Code での利用
 
@@ -312,8 +257,7 @@ public function myPrompt(string $arg): array
 {
   "mcpServers": {
     "seiren": {
-      "command": "php",
-      "args": ["/path/to/seiren/server.php"]
+      "command": "/path/to/seiren/seiren"
     }
   }
 }

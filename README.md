@@ -32,16 +32,15 @@ AIエージェント（Cursor、Claude Code等）と連携し、コードの品�
 
 ## 技術スタック
 
-- PHP 8.2+
-- [mcp-sdk-php](https://github.com/modelcontextprotocol/php-sdk) v0.1
-- PHPStan (静的解析)
+- Go 1.25+
+- [mcp-go](https://github.com/mark3labs/mcp-go) v0.44.1
 
 ## インストール
 
 ```bash
 git clone https://github.com/your-username/seiren.git
 cd seiren
-composer install
+go build -o seiren ./
 ```
 
 ## 使い方
@@ -54,8 +53,7 @@ composer install
 {
   "mcpServers": {
     "seiren": {
-      "command": "php",
-      "args": ["/path/to/seiren/server.php"]
+      "command": "/path/to/seiren/seiren"
     }
   }
 }
@@ -64,20 +62,18 @@ composer install
 ## コマンド
 
 ```bash
-# 依存関係インストール
-composer install
-
-# 静的解析
-php -d memory_limit=512M ./vendor/bin/phpstan analyse src server.php --level=max
+# ビルド
+go build -o seiren ./
 
 # サーバー起動（テスト用）
-php server.php
+./seiren
 ```
 
 ## ディレクトリ構成
 
 ```
-├── server.php                  # エントリーポイント
+├── main.go                     # エントリーポイント
+├── go.mod
 ├── prompts/                    # プロンプト定義（Markdownファイル）
 │   ├── core/                   # コアプロンプト
 │   ├── antipatterns/           # アンチパターン検出
@@ -85,22 +81,16 @@ php server.php
 │   ├── perspectives/           # 設計観点（DDD, Laravel等）
 │   ├── languages/              # 言語固有（PHP, TypeScript等）
 │   └── functions/              # 機能別プロンプト
-├── src/
-│   ├── PromptLoader.php        # Markdownプロンプト読み込み
-│   ├── CodeQualityPrompts.php  # MCPプロンプト定義
-│   └── Prompts/
-│       ├── AnalysisFocus.php
-│       ├── Core/
-│       ├── Enums/
-│       └── Functions/
-├── composer.json
-└── vendor/
+├── domain/                     # ドメイン型定義（Focus, Language等）
+├── functions/                  # プロンプト生成ロジック
+├── promptloader/               # Markdownファイル読み込み・キャッシュ
+└── tools/                      # MCPツール定義
 ```
 
 ## プロンプトのカスタマイズ
 
 プロンプトはMarkdown + YAML Front Matter形式で外部ファイル化されています。
-PHPコードを編集せずにプロンプトの内容を変更可能です。
+Goコードを編集せずにプロンプトの内容を変更可能です。
 
 ### ファイル形式
 
@@ -120,5 +110,5 @@ description: カプセル化の定義と判断基準
 ### 編集方法
 
 1. `prompts/` 内の該当Markdownファイルを直接編集
-2. PHPコードの変更は不要
+2. Goコードの変更は不要
 3. Front Matter（`---`で囲まれた部分）はメタデータ、それ以下が実際のプロンプト内容
