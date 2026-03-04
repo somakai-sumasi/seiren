@@ -6,7 +6,7 @@ import (
 )
 
 func GenerateTestCode(code, testFramework, language string) string {
-	loader := promptloader.GetInstance()
+	loader := promptloader.Get()
 
 	frameworkGuide := ""
 	if fw, ok := domain.TestFrameworkFromAlias(testFramework); ok {

@@ -7,7 +7,7 @@ import (
 )
 
 func GenerateDebtAnalysis(code, perspective, language string, focuses []string) string {
-	loader := promptloader.GetInstance()
+	loader := promptloader.Get()
 
 	if len(focuses) == 0 {
 		focuses = domain.DefaultFocuses()

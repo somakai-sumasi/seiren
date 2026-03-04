@@ -2,11 +2,11 @@ package mcpserver
 
 import (
 	"context"
-	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
+	"seiren/internal/domain"
 	"seiren/internal/functions"
 )
 
@@ -70,12 +70,7 @@ func handleAnalyzeTechnicalDebt(_ context.Context, request mcp.CallToolRequest) 
 	perspective := request.GetString("perspective", "")
 	focus := request.GetString("focus", "")
 
-	var focuses []string
-	if focus != "" {
-		for _, f := range strings.Split(focus, ",") {
-			focuses = append(focuses, strings.TrimSpace(f))
-		}
-	}
+	focuses := domain.ParseFocusInput(focus)
 
 	result := functions.GenerateDebtAnalysis(code, perspective, language, focuses)
 	return mcp.NewToolResultText(result), nil

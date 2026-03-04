@@ -1,0 +1,44 @@
+version: 2
+
+builds:
+  - id: seiren
+    main: ./cmd/cli/
+    binary: seiren
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+
+  - id: seiren-mcp
+    main: ./cmd/mcp/
+    binary: seiren-mcp
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+
+archives:
+  - id: seiren-archive
+    builds:
+      - seiren
+      - seiren-mcp
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
