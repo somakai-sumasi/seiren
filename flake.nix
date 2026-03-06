@@ -3,7 +3,7 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-  outputs = { nixpkgs, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
@@ -11,7 +11,7 @@
       packages = forAllSystems (pkgs: rec {
         seiren = pkgs.buildGoModule {
           pname = "seiren";
-          version = "0.1.0";
+          version = self.shortRev or self.dirtyShortRev or "dev";
 
           src = ./.;
 
