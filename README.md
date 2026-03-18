@@ -28,7 +28,7 @@ AIエージェント（Cursor、Claude Code等）と連携し、コードの品�
 - **欠陥スコアリング**: 独自計算式に基づくスコアリング
 - **具体的な行番号の指摘**: 例: `(13, 24-26, 33-35行目)`
 - **設計観点の選択**: DDD、Laravel、Clean Architecture
-- **複数言語対応**: PHP、TypeScript
+- **複数言語対応**: PHP、TypeScript、Go、Python
 
 ## 技術スタック
 
@@ -95,9 +95,14 @@ cat target.php | ./seiren test --language php
 │   ├── core/                   # コアプロンプト
 │   ├── antipatterns/           # アンチパターン検出
 │   ├── output-formats/         # 出力フォーマット
-│   ├── perspectives/           # 設計観点（DDD, Laravel等）
-│   ├── languages/              # 言語固有（PHP, TypeScript等）
+│   ├── perspectives/           # 設計観点（DDD, Laravel, Clean Architecture）
+│   ├── languages/              # 言語固有（PHP, TypeScript, Go, Python）
 │   └── functions/              # 機能別プロンプト
+│       ├── debt-analysis/
+│       ├── refactoring-suggestion/
+│       └── test-code-generation/
+│           ├── frameworks/     # PHPUnit, gotest, pytest, vitest, jest
+│           └── languages/      # 言語別テスト注意点
 └── go.mod
 ```
 
