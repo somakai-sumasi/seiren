@@ -13,7 +13,7 @@ import (
 func RegisterTools(s *server.MCPServer) {
 	s.AddTool(
 		mcp.NewTool("analyze_technical_debt",
-			mcp.WithDescription(`技術的負債を分析し、欠陥を特定。行番号と欠陥スコアを含むテーブル形式で出力。
+			mcp.WithDescription(`技術的負債の分析用プロンプトを生成する。このツールは分析結果ではなく「分析指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードを分析・レビューして結果を出力すること。
 
 【focus引数 - 分析観点の指定】
 グループ指定:
@@ -42,7 +42,7 @@ func RegisterTools(s *server.MCPServer) {
 
 	s.AddTool(
 		mcp.NewTool("suggest_refactoring",
-			mcp.WithDescription("設計改善案をテーブル形式とMermaidクラス図で提案。DDD、Laravel、Clean Architecture等の観点を選択可能。"),
+			mcp.WithDescription("リファクタリング提案用プロンプトを生成する。このツールは提案結果ではなく「分析指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードを分析してテーブル形式とMermaidクラス図で改善案を出力すること。DDD、Laravel、Clean Architecture等の観点を選択可能。"),
 			mcp.WithString("code", mcp.Description("分析対象コード")),
 			mcp.WithString("context", mcp.Description("追加コンテキスト")),
 			mcp.WithString("perspective", mcp.Description("設計観点（ddd, laravel, clean）")),
@@ -52,7 +52,7 @@ func RegisterTools(s *server.MCPServer) {
 
 	s.AddTool(
 		mcp.NewTool("generate_test_code",
-			mcp.WithDescription("高品質なテストコードを生成。PHPUnit、等のフレームワークに対応。"),
+			mcp.WithDescription("テストコード生成用プロンプトを生成する。このツールはテストコードそのものではなく「生成指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードのテストコードを生成すること。PHPUnit、gotest、pytest、vitest、jest等のフレームワークに対応。"),
 			mcp.WithString("code", mcp.Description("テスト対象コード")),
 			mcp.WithString("language", mcp.Description("言語（php, typescript, go, python）")),
 			mcp.WithString("testFramework",
