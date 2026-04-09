@@ -13,25 +13,7 @@ import (
 func RegisterTools(s *server.MCPServer) {
 	s.AddTool(
 		mcp.NewTool("analyze_technical_debt",
-			mcp.WithDescription(`技術的負債の分析用プロンプトを生成する。このツールは分析結果ではなく「分析指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードを分析・レビューして結果を出力すること。
-
-【focus引数 - 分析観点の指定】
-グループ指定:
-  - basic: カプセル化, 関心の分離, 命名(デフォルト)
-  - structure: ドメインモデル, レイヤ分離, データモデル層, Repository層, Service層, interface設計
-  - quality: 不変性, 凝集性, 結合度, 条件分岐
-  - antipatterns: 生焼けオブジェクト, デッドコード, null問題等
-  - all: 全ての観点
-
-個別指定(カンマ区切り):
-  encapsulation, separation-of-concerns, naming,
-  domain-model-completeness, layer-separation,
-  layer-data-model, layer-repository, layer-service, interface-design,
-  immutability, cohesion, coupling, conditional-branching,
-  half-baked-object, method-chain, dead-code, magic-number,
-  null-problem, exception-abuse, god-class
-
-例: focus="basic,antipatterns" または focus="encapsulation,naming"`),
+			mcp.WithDescription(`技術的負債の分析プロンプトを返す。返されたプロンプトに従い対象コードを分析すること。focus: basic(デフォルト), structure, quality, antipatterns, all。カンマ区切りで複数指定可。`),
 			mcp.WithString("code", mcp.Description("分析対象コード")),
 			mcp.WithString("language", mcp.Description("言語（php, typescript, go, python）")),
 			mcp.WithString("perspective", mcp.Description("設計観点（ddd, laravel, clean）")),
@@ -42,17 +24,18 @@ func RegisterTools(s *server.MCPServer) {
 
 	s.AddTool(
 		mcp.NewTool("suggest_refactoring",
-			mcp.WithDescription("リファクタリング提案用プロンプトを生成する。このツールは提案結果ではなく「分析指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードを分析してテーブル形式とMermaidクラス図で改善案を出力すること。DDD、Laravel、Clean Architecture等の観点を選択可能。"),
+			mcp.WithDescription(`リファクタリング提案プロンプトを返す。返されたプロンプトに従いMermaidクラス図付きで改善案を出力すること。focus: basic(デフォルト), structure, quality, all。`),
 			mcp.WithString("code", mcp.Description("分析対象コード")),
 			mcp.WithString("context", mcp.Description("追加コンテキスト")),
 			mcp.WithString("perspective", mcp.Description("設計観点（ddd, laravel, clean）")),
+			mcp.WithString("focus", mcp.Description("分析観点（カンマ区切りで複数指定可）")),
 		),
 		handleSuggestRefactoring,
 	)
 
 	s.AddTool(
 		mcp.NewTool("generate_test_code",
-			mcp.WithDescription("テストコード生成用プロンプトを生成する。このツールはテストコードそのものではなく「生成指示プロンプト」を返す。返されたプロンプトの指示に従い、あなた自身が対象コードのテストコードを生成すること。PHPUnit、gotest、pytest、vitest、jest等のフレームワークに対応。"),
+			mcp.WithDescription(`テストコード生成プロンプトを返す。返されたプロンプトに従いテストコードを生成すること。PHPUnit, gotest, pytest, vitest, jest対応。`),
 			mcp.WithString("code", mcp.Description("テスト対象コード")),
 			mcp.WithString("language", mcp.Description("言語（php, typescript, go, python）")),
 			mcp.WithString("testFramework",
@@ -79,8 +62,11 @@ func handleSuggestRefactoring(_ context.Context, request mcp.CallToolRequest) (*
 	code := request.GetString("code", "")
 	ctx := request.GetString("context", "")
 	perspective := request.GetString("perspective", "")
+	focus := request.GetString("focus", "")
 
-	result := functions.GenerateRefactoringSuggestion(code, ctx, perspective)
+	focuses := domain.ParseFocusInput(focus)
+
+	result := functions.GenerateRefactoringSuggestion(code, ctx, perspective, focuses)
 	return mcp.NewToolResultText(result), nil
 }
 

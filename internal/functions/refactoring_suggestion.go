@@ -1,14 +1,19 @@
 package functions
 
 import (
-	"seiren/internal/promptloader"
 	"seiren/internal/domain"
+	"seiren/internal/promptloader"
 )
 
-func GenerateRefactoringSuggestion(code, context, perspective string) string {
+func GenerateRefactoringSuggestion(code, context, perspective string, focuses []string) string {
 	loader := promptloader.Get()
 
-	corePrompt := domain.CorePromptsAll(loader)
+	if len(focuses) == 0 {
+		focuses = domain.DefaultFocuses()
+	}
+
+	resolved := domain.ResolveFocuses(focuses)
+	corePrompt := buildPromptFromFocuses(resolved.Core, loader)
 	outputFormat := domain.OutputFormatsForRefactoring(loader)
 
 	contextSection := ""

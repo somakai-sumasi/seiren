@@ -31,7 +31,8 @@ go test ./...
 
 # CLI使用例
 ./seiren analyze --file example.php --language php --perspective ddd
-./seiren refactor --file example.php --perspective clean
+./seiren analyze --file example.php --language php --focus "basic,antipatterns"
+./seiren refactor --file example.php --perspective clean --focus structure
 cat example.php | ./seiren test --language php
 
 # MCPサーバー起動（テスト用）

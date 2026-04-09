@@ -17,7 +17,9 @@ func GenerateDebtAnalysis(code, perspective, language string, focuses []string) 
 
 	corePrompt := buildPromptFromFocuses(resolved.Core, loader)
 	antipatternsPrompt := buildPromptFromFocuses(resolved.Antipatterns, loader)
-	outputFormat := domain.OutputFormatsAll(loader)
+
+	allFocuses := append(resolved.Core, resolved.Antipatterns...)
+	outputFormat := domain.OutputFormatsForFocuses(allFocuses, loader)
 
 	perspectivePrompt := ""
 	if perspective != "" {
