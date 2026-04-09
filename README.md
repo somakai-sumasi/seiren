@@ -53,8 +53,11 @@ go build -o seiren-mcp ./cmd/mcp/     # MCP サーバー
 # 技術的負債分析
 ./seiren analyze --file target.php --language php --perspective ddd
 
-# リファクタリング提案
-./seiren refactor --code "class Foo { ... }" --perspective clean
+# focus指定で分析観点を絞る（デフォルト: basic）
+./seiren analyze --file target.php --language php --focus "basic,antipatterns"
+
+# リファクタリング提案（focusで観点を絞れる）
+./seiren refactor --code "class Foo { ... }" --perspective clean --focus structure
 
 # テストコード生成
 cat target.php | ./seiren test --language php
@@ -63,6 +66,18 @@ cat target.php | ./seiren test --language php
 ./seiren --help
 ./seiren analyze --help
 ```
+
+### focus（分析観点）
+
+| グループ | 含まれる観点 |
+|----------|-------------|
+| `basic` (デフォルト) | カプセル化, 関心の分離, 命名 |
+| `structure` | ドメインモデル, レイヤ分離, データモデル層, Repository層, Service層, interface設計 |
+| `quality` | 不変性, 凝集性, 結合度, 条件分岐 |
+| `antipatterns` | 生焼けオブジェクト, デッドコード, null問題等 |
+| `all` | 全ての観点 |
+
+カンマ区切りで複数指定可: `--focus "basic,structure"`
 
 ### MCP サーバーとして（Claude Code等）
 

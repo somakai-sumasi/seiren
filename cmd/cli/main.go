@@ -85,7 +85,7 @@ func newAnalyzeCmd() *cobra.Command {
 }
 
 func newRefactorCmd() *cobra.Command {
-	var code, file, ctx, perspective string
+	var code, file, ctx, perspective, focus string
 
 	cmd := &cobra.Command{
 		Use:   "refactor",
@@ -96,7 +96,8 @@ func newRefactorCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			result := functions.GenerateRefactoringSuggestion(c, ctx, perspective)
+			focuses := domain.ParseFocusInput(focus)
+			result := functions.GenerateRefactoringSuggestion(c, ctx, perspective, focuses)
 			fmt.Print(result)
 			return nil
 		},
@@ -106,6 +107,7 @@ func newRefactorCmd() *cobra.Command {
 	cmd.Flags().StringVar(&file, "file", "", "分析対象ファイルパス")
 	cmd.Flags().StringVar(&ctx, "context", "", "追加コンテキスト")
 	cmd.Flags().StringVar(&perspective, "perspective", "", "設計観点 (ddd, laravel, clean)")
+	cmd.Flags().StringVar(&focus, "focus", "", "分析観点（カンマ区切り）")
 
 	return cmd
 }
